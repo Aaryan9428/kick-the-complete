@@ -1,0 +1,27 @@
+{
+  "overview": "Kick The Complete is a world-class luxury sneaker ecommerce website for a premium sneaker brand. Features a cinematic dark aesthetic with red accents, real product photos from the store, and full Stripe payment processing.",
+  "features": [
+    "Cinematic hero with store photos",
+    "Full product catalog with real sneaker photos",
+    "Shop with brand/price/search filtering",
+    "Product detail with size selection",
+    "Zustand-powered shopping cart",
+    "Real Stripe payment processing",
+    "Internet Identity login",
+    "Mobile-first luxury animations",
+    "Glassmorphism and glow effects",
+    "Scroll-triggered cinematic reveals"
+  ],
+  "category": "ecommerce",
+  "tags": [
+    "sneakers",
+    "luxury",
+    "ecommerce",
+    "dark-theme",
+    "stripe",
+    "premium",
+    "fashion",
+    "animated"
+  ],
+  "last_updated": "2026-05-08T10:36:06.388Z"
+}
