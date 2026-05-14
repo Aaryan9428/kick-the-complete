@@ -13,8 +13,10 @@ import Runtime "mo:core/Runtime";
 import OrderRequestTypes "types/order-requests";
 import OrderNotifLib "lib/order-notifications";
 import OrderNotificationsMixin "mixins/order-notifications";
+import Migration "migration";
 
-actor {
+(with migration = Migration.run)
+persistent actor {
   // Authorization
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -235,7 +237,6 @@ actor {
 
   // Domain mixins
   include ProductsMixin(accessControlState, productCatalog);
-  include OrdersMixin(accessControlState, orderStore, orderState);
   // Stripe-required functions (must live directly in actor)
   public query func isStripeConfigured() : async Bool {
     stripeConfiguration != null;
@@ -266,6 +267,9 @@ actor {
   public query func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
     OutCall.transform(input);
   };
+
+  // Domain mixins that require transform (must come after transform definition)
+  include OrdersMixin(accessControlState, orderStore, orderState, transform);
 
   // Order notification mixin (after transform so the shared query func is in scope)
   include OrderNotificationsMixin(orderRequestStore, orderRequestState, transform);

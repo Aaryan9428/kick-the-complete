@@ -1,3 +1,4 @@
+import { CartDrawer } from "./CartDrawer";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 
@@ -15,6 +16,7 @@ export function Layout({ children, noPadding = false }: LayoutProps) {
         {children}
       </main>
       <Footer />
+      <CartDrawer />
     </div>
   );
 }

@@ -1,126 +1,156 @@
+import { createActor } from "@/backend";
+import type { CartItemInput, PaymentMethod } from "@/backend";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import {
-  useCreateCheckoutSession,
-  useIsStripeConfigured,
-  useSetStripeConfiguration,
-} from "@/hooks/useProducts";
 import { useCartStore } from "@/stores/cartStore";
-import { useInternetIdentity } from "@caffeineai/core-infrastructure";
+import { useActor } from "@caffeineai/core-infrastructure";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
-  AlertCircle,
-  CreditCard,
+  Banknote,
+  CheckCircle2,
   Loader2,
   Lock,
   ShoppingBag,
+  Smartphone,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+type PaymentOption = "cod" | "phonepe";
+
+interface FormState {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  notes: string;
+}
+
+const inputClass =
+  "bg-gray-900 border border-gray-700 focus:border-pink-500 focus:ring-1 focus:ring-pink-500/30 rounded-lg px-4 py-3 text-sm text-white placeholder:text-gray-500 transition-colors outline-none w-full";
+
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCartStore();
-  const total = totalPrice();
+  const subtotal = totalPrice();
+  const gst = Math.round(subtotal * 0.18);
+  const total = subtotal + gst;
   const navigate = useNavigate();
-  const { isAuthenticated } = useInternetIdentity();
-  const { data: stripeConfigured, isLoading: checkingStripe } =
-    useIsStripeConfigured();
-  const createCheckout = useCreateCheckoutSession();
-  const setStripeConfig = useSetStripeConfiguration();
+  const { actor } = useActor(createActor);
 
-  const [stripeKey, setStripeKey] = useState("");
-  const [countries, setCountries] = useState("US,GB,CA,AU,IN");
-  const [showStripeSetup, setShowStripeSetup] = useState(false);
-
-  const [shippingForm, setShippingForm] = useState({
+  const [form, setForm] = useState<FormState>({
     name: "",
+    phone: "",
     email: "",
     address: "",
     city: "",
     state: "",
-    zip: "",
+    pincode: "",
+    notes: "",
   });
-  const [shippingErrors, setShippingErrors] = useState<Record<string, string>>(
-    {},
-  );
+  const [errors, setErrors] = useState<Partial<FormState>>({});
+  const [paymentMethod, setPaymentMethod] = useState<PaymentOption>("cod");
+  const [phonepePaid, setPhonepePaid] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const validateShipping = () => {
-    const errors: Record<string, string> = {};
-    if (!shippingForm.name.trim()) errors.name = "Name is required";
-    if (!shippingForm.email.trim()) errors.email = "Email is required";
-    else if (!/^[^@]+@[^@]+\.[^@]+$/.test(shippingForm.email))
-      errors.email = "Invalid email";
-    if (!shippingForm.address.trim()) errors.address = "Address is required";
-    if (!shippingForm.city.trim()) errors.city = "City is required";
-    if (!shippingForm.state.trim()) errors.state = "State is required";
-    if (!shippingForm.zip.trim()) errors.zip = "ZIP code is required";
-    setShippingErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+  const fmt = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
-  const handleFieldChange = (field: string, value: string) => {
-    setShippingForm((prev) => ({ ...prev, [field]: value }));
-    if (shippingErrors[field]) {
-      setShippingErrors((prev) => {
-        const n = { ...prev };
+  const handleField = (field: keyof FormState, value: string) => {
+    setForm((p) => ({ ...p, [field]: value }));
+    if (errors[field])
+      setErrors((p) => {
+        const n = { ...p };
         delete n[field];
         return n;
       });
-    }
   };
 
-  const handleStripeSetup = async () => {
-    if (!stripeKey.trim()) {
-      toast.error("Enter your Stripe secret key");
-      return;
-    }
-    try {
-      await setStripeConfig.mutateAsync({
-        secretKey: stripeKey.trim(),
-        allowedCountries: countries
-          .split(",")
-          .map((c) => c.trim())
-          .filter(Boolean),
-      });
-      toast.success("Stripe configured successfully!");
-      setShowStripeSetup(false);
-    } catch {
-      toast.error("Failed to configure Stripe");
-    }
+  const validate = () => {
+    const e: Partial<FormState> = {};
+    if (!form.name.trim()) e.name = "Name is required";
+    if (!form.phone.trim()) e.phone = "Phone number is required";
+    else if (!/^[6-9]\d{9}$/.test(form.phone.replace(/^\+91\s?/, "")))
+      e.phone = "Enter a valid 10-digit Indian mobile number";
+    if (!form.address.trim()) e.address = "Address is required";
+    if (!form.city.trim()) e.city = "City is required";
+    if (!form.state.trim()) e.state = "State is required";
+    if (!form.pincode.trim()) e.pincode = "Pincode is required";
+    else if (!/^\d{6}$/.test(form.pincode))
+      e.pincode = "Enter a valid 6-digit pincode";
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleCheckout = async () => {
-    if (!isAuthenticated) {
-      navigate({ to: "/login" });
-      return;
-    }
+  const handlePlaceOrder = async () => {
     if (items.length === 0) {
       navigate({ to: "/cart" });
       return;
     }
-    if (!validateShipping()) {
-      toast.error("Please fill in all shipping details");
+    if (!validate()) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    if (paymentMethod === "phonepe" && !phonepePaid) {
+      toast.error("Please confirm you have completed the PhonePe payment");
+      return;
+    }
+    if (!actor) {
+      toast.error("Connection not ready. Please try again.");
       return;
     }
 
-    const shoppingItems = items.map((item) => ({
-      productName: item.name,
-      currency: "inr",
-      quantity: BigInt(item.quantity),
-      priceInCents: BigInt(Math.round(item.price * 100)),
-      productDescription: `${item.brand} - Size ${item.size}`,
-    }));
-
+    setIsSubmitting(true);
     try {
-      const session = await createCheckout.mutateAsync(shoppingItems);
-      if (!session?.url) throw new Error("Missing session url");
-      clearCart();
-      window.location.href = session.url;
-    } catch (_err) {
-      toast.error("Checkout failed. Please try again.");
+      const cartItems: CartItemInput[] = items.map((item) => ({
+        productId: item.productId,
+        productName: item.name,
+        size: item.size,
+        quantity: BigInt(item.quantity),
+        priceInCents: BigInt(Math.round(item.price * 100)),
+      }));
+
+      const pm: PaymentMethod =
+        paymentMethod === "phonepe"
+          ? ("phonepe" as PaymentMethod)
+          : ("cod" as PaymentMethod);
+
+      const fullAddress = `${form.address}, ${form.city}, ${form.state}`;
+
+      const result = await actor.placeFullOrder({
+        customerName: form.name,
+        customerPhone: form.phone,
+        shippingAddress: fullAddress,
+        pincode: form.pincode,
+        orderNotes: form.notes,
+        cartItems,
+        paymentMethod: pm,
+        totalInCents: BigInt(Math.round(total * 100)),
+      });
+
+      if (result.__kind__ === "ok") {
+        clearCart();
+        navigate({
+          to: "/payment-success",
+          search: {
+            orderId: result.ok.orderId.toString(),
+            displayOrderId: result.ok.displayOrderId,
+            paymentMethod,
+            total: total.toString(),
+          },
+        });
+      } else {
+        toast.error(result.err || "Failed to place order. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -148,397 +178,531 @@ export default function Checkout() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-10" data-ocid="checkout.page">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="text-xs font-semibold tracking-[0.25em] uppercase text-primary mb-2">
-            Secure Checkout
-          </div>
-          <h1 className="section-heading mb-10">Complete Your Order</h1>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Order summary */}
+      <div
+        className="min-h-screen bg-[#050508] px-4 py-10"
+        data-ocid="checkout.page"
+      >
+        <div className="container mx-auto max-w-7xl">
+          {/* Header */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            className="mb-10"
           >
-            <h2 className="font-display font-bold text-foreground mb-6">
-              Order Summary
-            </h2>
-            <div className="space-y-3 mb-6">
-              {items.map((item, i) => (
-                <div
-                  key={`${item.productId}-${item.size}`}
-                  className="glass-card p-3 flex gap-3 items-center"
-                  data-ocid={`checkout.item.${i + 1}`}
-                >
-                  <div className="w-14 h-14 rounded-lg overflow-hidden bg-muted/30 shrink-0">
-                    <img
-                      src={item.imagePath}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-foreground truncate">
-                      {item.name}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Size {item.size} &times; {item.quantity}
-                    </div>
-                  </div>
-                  <div className="text-sm font-bold text-foreground shrink-0">
-                    ₹{(item.price * item.quantity).toLocaleString("en-IN")}
-                  </div>
-                </div>
-              ))}
+            <div className="text-xs font-semibold tracking-[0.25em] uppercase bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
+              Secure Checkout
             </div>
-            <div className="glass-card p-4 space-y-2 text-sm">
-              <div className="flex justify-between text-muted-foreground">
-                <span>Subtotal</span>
-                <span className="text-foreground">
-                  ₹{total.toLocaleString("en-IN")}
-                </span>
-              </div>
-              <div className="flex justify-between text-muted-foreground">
-                <span>Shipping</span>
-                <span className="text-accent">Free</span>
-              </div>
-              <div className="h-px bg-border/30" />
-              <div className="flex justify-between font-bold text-foreground text-base">
-                <span>Total</span>
-                <span>₹{total.toLocaleString("en-IN")}</span>
-              </div>
-            </div>
+            <h1 className="text-3xl md:text-5xl font-display font-black text-white">
+              Complete Your Order
+            </h1>
           </motion.div>
 
-          {/* Payment */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="space-y-6"
-          >
-            {/* Auth warning */}
-            {!isAuthenticated && (
-              <div
-                className="flex items-start gap-3 p-4 rounded-lg border border-primary/30 bg-primary/5"
-                data-ocid="checkout.auth_warning"
-              >
-                <AlertCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-semibold text-foreground text-sm">
-                    Login Required
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    You need to login to complete your purchase.
-                  </div>
-                  <Link to="/login" className="mt-2 inline-block">
-                    <Button
-                      size="sm"
-                      className="bg-primary text-primary-foreground text-xs h-7"
-                      data-ocid="checkout.login_redirect_button"
-                    >
-                      Login Now
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Stripe Setup (admin) */}
-            {isAuthenticated && !checkingStripe && !stripeConfigured && (
-              <div
-                className="glass-card p-5"
-                data-ocid="checkout.stripe_setup_panel"
-              >
-                <div className="flex items-center gap-2 mb-4">
-                  <CreditCard className="w-5 h-5 text-accent" />
-                  <h3 className="font-display font-semibold text-foreground">
-                    Configure Stripe Payments
-                  </h3>
-                </div>
-                {showStripeSetup ? (
-                  <div className="space-y-4">
-                    <div className="space-y-1.5">
-                      <Label
-                        htmlFor="stripe-key"
-                        className="text-xs text-muted-foreground"
-                      >
-                        Stripe Secret Key
-                      </Label>
-                      <Input
-                        id="stripe-key"
-                        data-ocid="checkout.stripe_key_input"
-                        type="password"
-                        placeholder="sk_test_..."
-                        value={stripeKey}
-                        onChange={(e) => setStripeKey(e.target.value)}
-                        className="bg-muted/30 border-border/40 text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label
-                        htmlFor="stripe-countries"
-                        className="text-xs text-muted-foreground"
-                      >
-                        Allowed Countries (comma-separated)
-                      </Label>
-                      <Input
-                        id="stripe-countries"
-                        data-ocid="checkout.stripe_countries_input"
-                        placeholder="US,GB,IN"
-                        value={countries}
-                        onChange={(e) => setCountries(e.target.value)}
-                        className="bg-muted/30 border-border/40 text-sm"
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        data-ocid="checkout.stripe_save_button"
-                        onClick={handleStripeSetup}
-                        disabled={setStripeConfig.isPending}
-                        className="bg-primary text-primary-foreground text-sm h-9"
-                      >
-                        {setStripeConfig.isPending ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          "Save"
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setShowStripeSetup(false)}
-                        className="text-sm h-9 border-border/40"
-                        data-ocid="checkout.stripe_cancel_button"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Admin: Configure Stripe to enable real payments.
-                    </p>
-                    <Button
-                      type="button"
-                      data-ocid="checkout.stripe_configure_button"
-                      onClick={() => setShowStripeSetup(true)}
-                      variant="outline"
-                      className="border-accent/40 text-accent hover:bg-accent/10 text-sm"
-                    >
-                      Configure Stripe
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Shipping Form */}
-            {isAuthenticated && (
-              <div
-                className="glass-card p-6 space-y-4"
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 items-start">
+            {/* LEFT COLUMN */}
+            <div className="space-y-6">
+              {/* Shipping Form */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="glass-card p-6 space-y-5"
                 data-ocid="checkout.shipping_form"
               >
-                <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-accent" /> Shipping Information
-                </h3>
+                <h2 className="font-display font-bold text-white flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-pink-400" />
+                  Shipping Information
+                </h2>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label
-                      htmlFor="ship-name"
-                      className="text-xs text-muted-foreground"
-                    >
+                    <Label htmlFor="name" className="text-xs text-gray-400">
                       Full Name *
                     </Label>
-                    <Input
-                      id="ship-name"
+                    <input
+                      id="name"
                       data-ocid="checkout.shipping_name_input"
-                      placeholder="John Doe"
-                      value={shippingForm.name}
-                      onChange={(e) =>
-                        handleFieldChange("name", e.target.value)
-                      }
-                      className="bg-muted/30 border-border/40 text-sm"
+                      placeholder="Rahul Sharma"
+                      value={form.name}
+                      onChange={(e) => handleField("name", e.target.value)}
+                      className={inputClass}
                     />
-                    {shippingErrors.name && (
+                    {errors.name && (
                       <p
-                        className="text-xs text-primary"
+                        className="text-xs text-pink-400"
                         data-ocid="checkout.shipping_name.field_error"
                       >
-                        {shippingErrors.name}
+                        {errors.name}
                       </p>
                     )}
                   </div>
+
                   <div className="space-y-1.5">
-                    <Label
-                      htmlFor="ship-email"
-                      className="text-xs text-muted-foreground"
-                    >
-                      Email *
+                    <Label htmlFor="phone" className="text-xs text-gray-400">
+                      Phone Number *
                     </Label>
-                    <Input
-                      id="ship-email"
-                      data-ocid="checkout.shipping_email_input"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={shippingForm.email}
-                      onChange={(e) =>
-                        handleFieldChange("email", e.target.value)
-                      }
-                      className="bg-muted/30 border-border/40 text-sm"
+                    <input
+                      id="phone"
+                      data-ocid="checkout.shipping_phone_input"
+                      placeholder="9XXXXXXXXX"
+                      value={form.phone}
+                      onChange={(e) => handleField("phone", e.target.value)}
+                      className={inputClass}
                     />
-                    {shippingErrors.email && (
+                    {errors.phone && (
                       <p
-                        className="text-xs text-primary"
-                        data-ocid="checkout.shipping_email.field_error"
+                        className="text-xs text-pink-400"
+                        data-ocid="checkout.shipping_phone.field_error"
                       >
-                        {shippingErrors.email}
+                        {errors.phone}
                       </p>
                     )}
                   </div>
                 </div>
+
                 <div className="space-y-1.5">
-                  <Label
-                    htmlFor="ship-address"
-                    className="text-xs text-muted-foreground"
-                  >
-                    Address *
+                  <Label htmlFor="email" className="text-xs text-gray-400">
+                    Email Address{" "}
+                    <span className="text-gray-600">(optional)</span>
                   </Label>
-                  <Input
-                    id="ship-address"
-                    data-ocid="checkout.shipping_address_input"
-                    placeholder="123 Main Street, Apt 4B"
-                    value={shippingForm.address}
-                    onChange={(e) =>
-                      handleFieldChange("address", e.target.value)
-                    }
-                    className="bg-muted/30 border-border/40 text-sm"
+                  <input
+                    id="email"
+                    data-ocid="checkout.shipping_email_input"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={form.email}
+                    onChange={(e) => handleField("email", e.target.value)}
+                    className={inputClass}
                   />
-                  {shippingErrors.address && (
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="address" className="text-xs text-gray-400">
+                    Shipping Address *
+                  </Label>
+                  <textarea
+                    id="address"
+                    data-ocid="checkout.shipping_address_input"
+                    placeholder="House/Flat No., Street, Area, Landmark"
+                    value={form.address}
+                    onChange={(e) => handleField("address", e.target.value)}
+                    rows={3}
+                    className={`${inputClass} resize-none`}
+                  />
+                  {errors.address && (
                     <p
-                      className="text-xs text-primary"
+                      className="text-xs text-pink-400"
                       data-ocid="checkout.shipping_address.field_error"
                     >
-                      {shippingErrors.address}
+                      {errors.address}
                     </p>
                   )}
                 </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-1.5">
-                    <Label
-                      htmlFor="ship-city"
-                      className="text-xs text-muted-foreground"
-                    >
+                    <Label htmlFor="city" className="text-xs text-gray-400">
                       City *
                     </Label>
-                    <Input
-                      id="ship-city"
+                    <input
+                      id="city"
                       data-ocid="checkout.shipping_city_input"
                       placeholder="Mumbai"
-                      value={shippingForm.city}
-                      onChange={(e) =>
-                        handleFieldChange("city", e.target.value)
-                      }
-                      className="bg-muted/30 border-border/40 text-sm"
+                      value={form.city}
+                      onChange={(e) => handleField("city", e.target.value)}
+                      className={inputClass}
                     />
-                    {shippingErrors.city && (
+                    {errors.city && (
                       <p
-                        className="text-xs text-primary"
+                        className="text-xs text-pink-400"
                         data-ocid="checkout.shipping_city.field_error"
                       >
-                        {shippingErrors.city}
+                        {errors.city}
                       </p>
                     )}
                   </div>
+
                   <div className="space-y-1.5">
-                    <Label
-                      htmlFor="ship-state"
-                      className="text-xs text-muted-foreground"
-                    >
+                    <Label htmlFor="state" className="text-xs text-gray-400">
                       State *
                     </Label>
-                    <Input
-                      id="ship-state"
+                    <input
+                      id="state"
                       data-ocid="checkout.shipping_state_input"
                       placeholder="Maharashtra"
-                      value={shippingForm.state}
-                      onChange={(e) =>
-                        handleFieldChange("state", e.target.value)
-                      }
-                      className="bg-muted/30 border-border/40 text-sm"
+                      value={form.state}
+                      onChange={(e) => handleField("state", e.target.value)}
+                      className={inputClass}
                     />
-                    {shippingErrors.state && (
+                    {errors.state && (
                       <p
-                        className="text-xs text-primary"
+                        className="text-xs text-pink-400"
                         data-ocid="checkout.shipping_state.field_error"
                       >
-                        {shippingErrors.state}
+                        {errors.state}
                       </p>
                     )}
                   </div>
+
                   <div className="space-y-1.5">
-                    <Label
-                      htmlFor="ship-zip"
-                      className="text-xs text-muted-foreground"
-                    >
-                      ZIP Code *
+                    <Label htmlFor="pincode" className="text-xs text-gray-400">
+                      Pincode *
                     </Label>
-                    <Input
-                      id="ship-zip"
-                      data-ocid="checkout.shipping_zip_input"
+                    <input
+                      id="pincode"
+                      data-ocid="checkout.shipping_pincode_input"
                       placeholder="400001"
-                      value={shippingForm.zip}
-                      onChange={(e) => handleFieldChange("zip", e.target.value)}
-                      className="bg-muted/30 border-border/40 text-sm"
+                      maxLength={6}
+                      value={form.pincode}
+                      onChange={(e) =>
+                        handleField(
+                          "pincode",
+                          e.target.value.replace(/\D/g, ""),
+                        )
+                      }
+                      className={inputClass}
                     />
-                    {shippingErrors.zip && (
+                    {errors.pincode && (
                       <p
-                        className="text-xs text-primary"
-                        data-ocid="checkout.shipping_zip.field_error"
+                        className="text-xs text-pink-400"
+                        data-ocid="checkout.shipping_pincode.field_error"
                       >
-                        {shippingErrors.zip}
+                        {errors.pincode}
                       </p>
                     )}
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Pay button */}
-            <div className="glass-card p-6">
-              <div className="flex items-center gap-2 mb-6">
-                <Lock className="w-4 h-4 text-accent" />
-                <span className="text-sm text-muted-foreground">
-                  Secured by Stripe. Your payment details are encrypted.
-                </span>
-              </div>
-              <Button
-                type="button"
-                data-ocid="checkout.pay_button"
-                onClick={handleCheckout}
-                disabled={createCheckout.isPending || !isAuthenticated}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-glow-accent h-12 font-semibold text-base"
+                <div className="space-y-1.5">
+                  <Label htmlFor="notes" className="text-xs text-gray-400">
+                    Order Notes{" "}
+                    <span className="text-gray-600">(optional)</span>
+                  </Label>
+                  <textarea
+                    id="notes"
+                    data-ocid="checkout.order_notes_input"
+                    placeholder="Any special instructions for delivery..."
+                    value={form.notes}
+                    onChange={(e) => handleField("notes", e.target.value)}
+                    rows={2}
+                    className={`${inputClass} resize-none`}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Payment Method */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="glass-card p-6 space-y-4"
+                data-ocid="checkout.payment_section"
               >
-                {createCheckout.isPending ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />{" "}
-                    Processing…
-                  </>
-                ) : (
-                  <>Pay ₹{total.toLocaleString("en-IN")} with Stripe</>
-                )}
-              </Button>
+                <h2 className="font-display font-bold text-white">
+                  Payment Method
+                </h2>
+
+                <div className="space-y-3">
+                  {/* COD */}
+                  <button
+                    type="button"
+                    data-ocid="checkout.payment_cod_tab"
+                    onClick={() => setPaymentMethod("cod")}
+                    className={`w-full rounded-xl border-2 p-4 text-left transition-all duration-200 ${
+                      paymentMethod === "cod"
+                        ? "border-pink-500 bg-pink-500/10 shadow-[0_0_20px_rgba(236,72,153,0.2)]"
+                        : "border-gray-700 bg-gray-900/50 hover:border-gray-500"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          paymentMethod === "cod"
+                            ? "bg-pink-500/20"
+                            : "bg-gray-800"
+                        }`}
+                      >
+                        <Banknote
+                          className={`w-5 h-5 ${
+                            paymentMethod === "cod"
+                              ? "text-pink-400"
+                              : "text-gray-400"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-white text-sm">
+                            Cash on Delivery
+                          </span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                            Free
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          Pay when your order arrives
+                        </p>
+                      </div>
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          paymentMethod === "cod"
+                            ? "border-pink-500 bg-pink-500"
+                            : "border-gray-600"
+                        }`}
+                      >
+                        {paymentMethod === "cod" && (
+                          <div className="w-2 h-2 rounded-full bg-white" />
+                        )}
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* PhonePe */}
+                  <button
+                    type="button"
+                    data-ocid="checkout.payment_phonepe_tab"
+                    onClick={() => setPaymentMethod("phonepe")}
+                    className={`w-full rounded-xl border-2 p-4 text-left transition-all duration-200 ${
+                      paymentMethod === "phonepe"
+                        ? "border-purple-500 bg-purple-500/10 shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                        : "border-gray-700 bg-gray-900/50 hover:border-gray-500"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          paymentMethod === "phonepe"
+                            ? "bg-purple-500/20"
+                            : "bg-gray-800"
+                        }`}
+                      >
+                        <Smartphone
+                          className={`w-5 h-5 ${
+                            paymentMethod === "phonepe"
+                              ? "text-purple-400"
+                              : "text-gray-400"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-white text-sm">
+                            PhonePe / UPI
+                          </span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                            Instant
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          Pay instantly via PhonePe UPI
+                        </p>
+                      </div>
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          paymentMethod === "phonepe"
+                            ? "border-purple-500 bg-purple-500"
+                            : "border-gray-600"
+                        }`}
+                      >
+                        {paymentMethod === "phonepe" && (
+                          <div className="w-2 h-2 rounded-full bg-white" />
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                {/* PhonePe Instructions Panel */}
+                <AnimatePresence>
+                  {paymentMethod === "phonepe" && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="rounded-xl border border-purple-500/30 bg-purple-500/5 p-5 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">💜</span>
+                          <h3 className="font-semibold text-white text-sm">
+                            PhonePe Payment Instructions
+                          </h3>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex items-start gap-3">
+                            <span className="w-6 h-6 rounded-full bg-purple-500/30 text-purple-300 text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
+                              1
+                            </span>
+                            <div>
+                              <p className="text-sm text-gray-300">
+                                Send payment to UPI ID:
+                              </p>
+                              <code className="mt-1.5 inline-block bg-gray-900 border border-purple-500/40 rounded-lg px-3 py-1.5 text-purple-300 font-mono text-sm font-bold tracking-wider">
+                                9834757639@ybl
+                              </code>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <span className="w-6 h-6 rounded-full bg-purple-500/30 text-purple-300 text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
+                              2
+                            </span>
+                            <div>
+                              <p className="text-sm text-gray-300">
+                                Amount to pay:
+                              </p>
+                              <p className="text-2xl font-display font-black bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mt-1">
+                                {fmt(total)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <span className="w-6 h-6 rounded-full bg-purple-500/30 text-purple-300 text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
+                              3
+                            </span>
+                            <p className="text-sm text-gray-300">
+                              Take a screenshot of the payment confirmation for
+                              your reference.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="border-t border-purple-500/20 pt-4">
+                          <label
+                            className="flex items-start gap-3 cursor-pointer group"
+                            htmlFor="phonepe-confirmed"
+                          >
+                            <Checkbox
+                              id="phonepe-confirmed"
+                              data-ocid="checkout.phonepe_paid_checkbox"
+                              checked={phonepePaid}
+                              onCheckedChange={(v) => setPhonepePaid(!!v)}
+                              className="mt-0.5 border-purple-500/50 data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500"
+                            />
+                            <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
+                              I have completed the PhonePe payment of{" "}
+                              <span className="font-bold text-purple-400">
+                                {fmt(total)}
+                              </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             </div>
-          </motion.div>
+
+            {/* RIGHT COLUMN */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="space-y-4 lg:sticky lg:top-24"
+            >
+              {/* Order Summary */}
+              <div
+                className="glass-card p-6"
+                data-ocid="checkout.order_summary"
+              >
+                <h2 className="font-display font-bold text-white mb-5">
+                  Order Summary
+                </h2>
+
+                <div className="space-y-3 mb-5">
+                  {items.map((item, i) => (
+                    <div
+                      key={`${item.productId}-${item.size}`}
+                      className="flex gap-3 items-center py-2 border-b border-gray-800 last:border-0"
+                      data-ocid={`checkout.item.${i + 1}`}
+                    >
+                      <div className="w-14 h-14 rounded-lg overflow-hidden bg-gray-800 shrink-0">
+                        <img
+                          src={item.imagePath}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-white truncate">
+                          {item.name}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-0.5">
+                          Size {item.size} &times; {item.quantity}
+                        </div>
+                      </div>
+                      <div className="text-sm font-bold text-white shrink-0">
+                        {fmt(item.price * item.quantity)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between text-gray-400">
+                    <span>Subtotal</span>
+                    <span className="text-white">{fmt(subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>GST (18%)</span>
+                    <span className="text-white">{fmt(gst)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>Shipping</span>
+                    <span className="text-emerald-400 font-medium">Free</span>
+                  </div>
+                  <div className="h-px bg-gray-700 my-1" />
+                  <div className="flex justify-between font-bold text-base">
+                    <span className="text-white">Total</span>
+                    <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                      {fmt(total)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Place Order CTA */}
+              <div className="glass-card p-4">
+                <button
+                  type="button"
+                  data-ocid="checkout.place_order_button"
+                  onClick={handlePlaceOrder}
+                  disabled={
+                    isSubmitting ||
+                    (paymentMethod === "phonepe" && !phonepePaid)
+                  }
+                  className="w-full relative overflow-hidden rounded-xl py-4 px-6 font-display font-bold text-white text-base tracking-wide bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_0_30px_rgba(236,72,153,0.4)] hover:shadow-[0_0_40px_rgba(236,72,153,0.6)] active:scale-[0.99]"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Placing Order…
+                    </span>
+                  ) : paymentMethod === "cod" ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Banknote className="w-5 h-5" />
+                      Place Order (COD)
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <CheckCircle2 className="w-5 h-5" />
+                      Confirm PhonePe Payment
+                    </span>
+                  )}
+                </button>
+
+                <p className="text-center text-xs text-gray-600 mt-3 flex items-center justify-center gap-1">
+                  <Lock className="w-3 h-3" />
+                  Your order details are secure and encrypted
+                </p>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </Layout>

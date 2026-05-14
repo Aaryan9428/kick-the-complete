@@ -28,11 +28,16 @@ export const OrderStatus = IDL.Variant({
   'paid' : IDL.Null,
   'delivered' : IDL.Null,
 });
+export const PaymentMethod = IDL.Variant({
+  'cod' : IDL.Null,
+  'stripe' : IDL.Null,
+  'phonepe' : IDL.Null,
+});
 export const UserId = IDL.Principal;
 export const Timestamp = IDL.Int;
 export const ProductId = IDL.Text;
 export const OrderItem = IDL.Record({
-  'size' : IDL.Text,
+  'size' : IDL.Opt(IDL.Text),
   'productId' : ProductId,
   'productName' : IDL.Text,
   'quantity' : IDL.Nat,
@@ -40,13 +45,20 @@ export const OrderItem = IDL.Record({
 });
 export const Order = IDL.Record({
   'id' : OrderId,
+  'customerName' : IDL.Opt(IDL.Text),
   'status' : OrderStatus,
+  'paymentMethod' : IDL.Opt(PaymentMethod),
+  'customerPhone' : IDL.Opt(IDL.Text),
   'userId' : UserId,
   'createdAt' : Timestamp,
   'updatedAt' : Timestamp,
   'totalInCents' : IDL.Nat,
+  'shippingAddress' : IDL.Opt(IDL.Text),
   'items' : IDL.Vec(OrderItem),
+  'pincode' : IDL.Opt(IDL.Text),
   'stripeSessionId' : IDL.Opt(IDL.Text),
+  'orderNotes' : IDL.Opt(IDL.Text),
+  'displayOrderId' : IDL.Opt(IDL.Text),
 });
 export const Product = IDL.Record({
   'id' : IDL.Text,
@@ -68,6 +80,13 @@ export const StripeSessionStatus = IDL.Variant({
     'response' : IDL.Text,
   }),
   'failed' : IDL.Record({ 'error' : IDL.Text }),
+});
+export const CartItemInput = IDL.Record({
+  'size' : IDL.Text,
+  'productId' : IDL.Text,
+  'productName' : IDL.Text,
+  'quantity' : IDL.Nat,
+  'priceInCents' : IDL.Nat,
 });
 export const StripeConfiguration = IDL.Record({
   'allowedCountries' : IDL.Vec(IDL.Text),
@@ -132,6 +151,30 @@ export const idlService = IDL.Service({
       [IDL.Vec(Product)],
       ['query'],
     ),
+  'placeFullOrder' : IDL.Func(
+      [
+        IDL.Record({
+          'customerName' : IDL.Text,
+          'paymentMethod' : PaymentMethod,
+          'customerPhone' : IDL.Text,
+          'cartItems' : IDL.Vec(CartItemInput),
+          'totalInCents' : IDL.Nat,
+          'shippingAddress' : IDL.Text,
+          'pincode' : IDL.Text,
+          'orderNotes' : IDL.Text,
+        }),
+      ],
+      [
+        IDL.Variant({
+          'ok' : IDL.Record({
+            'orderId' : IDL.Nat,
+            'displayOrderId' : IDL.Text,
+          }),
+          'err' : IDL.Text,
+        }),
+      ],
+      [],
+    ),
   'placeOrder' : IDL.Func([IDL.Vec(OrderItem), IDL.Nat], [Order], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
   'submitOrderRequest' : IDL.Func(
@@ -171,11 +214,16 @@ export const idlFactory = ({ IDL }) => {
     'paid' : IDL.Null,
     'delivered' : IDL.Null,
   });
+  const PaymentMethod = IDL.Variant({
+    'cod' : IDL.Null,
+    'stripe' : IDL.Null,
+    'phonepe' : IDL.Null,
+  });
   const UserId = IDL.Principal;
   const Timestamp = IDL.Int;
   const ProductId = IDL.Text;
   const OrderItem = IDL.Record({
-    'size' : IDL.Text,
+    'size' : IDL.Opt(IDL.Text),
     'productId' : ProductId,
     'productName' : IDL.Text,
     'quantity' : IDL.Nat,
@@ -183,13 +231,20 @@ export const idlFactory = ({ IDL }) => {
   });
   const Order = IDL.Record({
     'id' : OrderId,
+    'customerName' : IDL.Opt(IDL.Text),
     'status' : OrderStatus,
+    'paymentMethod' : IDL.Opt(PaymentMethod),
+    'customerPhone' : IDL.Opt(IDL.Text),
     'userId' : UserId,
     'createdAt' : Timestamp,
     'updatedAt' : Timestamp,
     'totalInCents' : IDL.Nat,
+    'shippingAddress' : IDL.Opt(IDL.Text),
     'items' : IDL.Vec(OrderItem),
+    'pincode' : IDL.Opt(IDL.Text),
     'stripeSessionId' : IDL.Opt(IDL.Text),
+    'orderNotes' : IDL.Opt(IDL.Text),
+    'displayOrderId' : IDL.Opt(IDL.Text),
   });
   const Product = IDL.Record({
     'id' : IDL.Text,
@@ -211,6 +266,13 @@ export const idlFactory = ({ IDL }) => {
       'response' : IDL.Text,
     }),
     'failed' : IDL.Record({ 'error' : IDL.Text }),
+  });
+  const CartItemInput = IDL.Record({
+    'size' : IDL.Text,
+    'productId' : IDL.Text,
+    'productName' : IDL.Text,
+    'quantity' : IDL.Nat,
+    'priceInCents' : IDL.Nat,
   });
   const StripeConfiguration = IDL.Record({
     'allowedCountries' : IDL.Vec(IDL.Text),
@@ -271,6 +333,30 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Text],
         [IDL.Vec(Product)],
         ['query'],
+      ),
+    'placeFullOrder' : IDL.Func(
+        [
+          IDL.Record({
+            'customerName' : IDL.Text,
+            'paymentMethod' : PaymentMethod,
+            'customerPhone' : IDL.Text,
+            'cartItems' : IDL.Vec(CartItemInput),
+            'totalInCents' : IDL.Nat,
+            'shippingAddress' : IDL.Text,
+            'pincode' : IDL.Text,
+            'orderNotes' : IDL.Text,
+          }),
+        ],
+        [
+          IDL.Variant({
+            'ok' : IDL.Record({
+              'orderId' : IDL.Nat,
+              'displayOrderId' : IDL.Text,
+            }),
+            'err' : IDL.Text,
+          }),
+        ],
+        [],
       ),
     'placeOrder' : IDL.Func([IDL.Vec(OrderItem), IDL.Nat], [Order], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),

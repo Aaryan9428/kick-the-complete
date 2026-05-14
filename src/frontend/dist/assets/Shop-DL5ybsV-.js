@@ -1,10 +1,9 @@
-import { a as useSearch, r as reactExports, j as jsxRuntimeExports, m as motion, L as Link, u as ue } from "./index-CQiv2YrY.js";
-import { c as createLucideIcon, u as useCartStore, L as Layout, S as Search, B as Button, H as Heart } from "./button-DfzMutqC.js";
-import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-j7epipU7.js";
-import { P as PRODUCTS, C as CATEGORIES, a as BRANDS, B as Badge } from "./products-S1TnAfQC.js";
-import { I as Input } from "./input-CcKVrE4h.js";
-import "./backend-BHlQehYT.js";
-import "./loader-circle-CxQ5ylIP.js";
+import { j as jsxRuntimeExports, a as useSearch, r as reactExports, m as motion, L as Link, u as ue } from "./index-BepgGYDm.js";
+import { c as createLucideIcon, a as cn, u as useCartStore, b as useUIStore, L as Layout, S as Search, B as Button, H as Heart } from "./button-rcDW-ULO.js";
+import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-9QYfpook.js";
+import { P as PRODUCTS, C as CATEGORIES, a as BRANDS, B as Badge } from "./products-U2Q5Zptf.js";
+import "./index-DBimtIV6.js";
+import "./loader-circle-Cpv7GnKP.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -23,6 +22,22 @@ const __iconNode = [
   ["line", { x1: "16", x2: "16", y1: "18", y2: "22", key: "1lctlv" }]
 ];
 const SlidersHorizontal = createLucideIcon("sliders-horizontal", __iconNode);
+function Input({ className, type, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "input",
+    {
+      type,
+      "data-slot": "input",
+      className: cn(
+        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        className
+      ),
+      ...props
+    }
+  );
+}
 function Shop() {
   const search = useSearch({ from: "/shop" });
   const [query, setQuery] = reactExports.useState(search.q ?? "");
@@ -35,6 +50,7 @@ function Shop() {
   );
   const { toggle, has } = useWishlistStore();
   const addItem = useCartStore((s) => s.addItem);
+  const openCart = useUIStore((s) => s.openCart);
   const [orderProduct, setOrderProduct] = reactExports.useState(null);
   const filtered = reactExports.useMemo(() => {
     let list = PRODUCTS;
@@ -68,6 +84,7 @@ function Shop() {
       size: product.sizes[Math.floor(product.sizes.length / 2)],
       quantity: 1
     });
+    openCart();
     ue.success(`${product.name} added to cart`);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Layout, { children: [
@@ -176,7 +193,7 @@ function Shop() {
           animate: { opacity: 1, y: 0 },
           transition: { duration: 0.4, delay: Math.min(i * 0.05, 0.4) },
           "data-ocid": `shop.product_item.${i + 1}`,
-          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-blue relative", children: [
+          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink relative", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "button",
               {
@@ -204,7 +221,10 @@ function Shop() {
                     src: product.imagePaths[0],
                     alt: product.name,
                     className: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500",
-                    loading: "lazy"
+                    loading: "lazy",
+                    onError: (e) => {
+                      e.target.src = "/assets/images/placeholder.svg";
+                    }
                   }
                 ),
                 product.badge && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-2 left-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-primary text-primary-foreground text-[9px] py-0 font-semibold", children: product.badge }) }),

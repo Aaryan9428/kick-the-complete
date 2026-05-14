@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Home-CD_tU2ye.js","assets/button-DfzMutqC.js","assets/products-S1TnAfQC.js","assets/arrow-right-DgopGQxq.js","assets/Shop-CKT_AV4y.js","assets/wishlistStore-j7epipU7.js","assets/backend-BHlQehYT.js","assets/loader-circle-CxQ5ylIP.js","assets/input-CcKVrE4h.js","assets/ProductDetail-CH-5VoQO.js","assets/package-9UKpTSxu.js","assets/Cart-DZ6FbCqF.js","assets/shopping-bag-CC5oXzFw.js","assets/Checkout-ULAyszAW.js","assets/Login-Cizpmnpy.js","assets/PaymentSuccess-DLpoeIKj.js","assets/PaymentFailure-cCoxC-Ep.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Home-C07Q39nw.js","assets/button-rcDW-ULO.js","assets/products-U2Q5Zptf.js","assets/arrow-right-Dm1O90fu.js","assets/Shop-DL5ybsV-.js","assets/wishlistStore-9QYfpook.js","assets/index-DBimtIV6.js","assets/loader-circle-Cpv7GnKP.js","assets/ProductDetail-BKtNhdr9.js","assets/package-C4lRBRd-.js","assets/Cart-B9Bm7VXm.js","assets/Checkout-CzyNs3B2.js","assets/smartphone-BitHaup5.js","assets/Login-jniEgKa9.js","assets/PaymentSuccess-DJGLXg02.js","assets/PaymentFailure-DFEey5ev.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -39386,14 +39386,14 @@ function RouterContextProvider({
 function RouterProvider({ router: router2, ...rest }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(RouterContextProvider, { router: router2, ...rest, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Matches, {}) });
 }
-const HomePage = reactExports.lazy(() => __vitePreload(() => import("./Home-CD_tU2ye.js"), true ? __vite__mapDeps([0,1,2,3]) : void 0));
-const ShopPage = reactExports.lazy(() => __vitePreload(() => import("./Shop-CKT_AV4y.js"), true ? __vite__mapDeps([4,1,5,6,7,2,8]) : void 0));
-const ProductDetailPage = reactExports.lazy(() => __vitePreload(() => import("./ProductDetail-CH-5VoQO.js"), true ? __vite__mapDeps([9,1,5,6,7,2,10]) : void 0));
-const CartPage = reactExports.lazy(() => __vitePreload(() => import("./Cart-DZ6FbCqF.js"), true ? __vite__mapDeps([11,1,12]) : void 0));
-const CheckoutPage = reactExports.lazy(() => __vitePreload(() => import("./Checkout-ULAyszAW.js"), true ? __vite__mapDeps([13,1,8,6,12,7]) : void 0));
-const LoginPage = reactExports.lazy(() => __vitePreload(() => import("./Login-Cizpmnpy.js"), true ? __vite__mapDeps([14,1,3,7]) : void 0));
-const PaymentSuccessPage = reactExports.lazy(() => __vitePreload(() => import("./PaymentSuccess-DLpoeIKj.js"), true ? __vite__mapDeps([15,1,10]) : void 0));
-const PaymentFailurePage = reactExports.lazy(() => __vitePreload(() => import("./PaymentFailure-cCoxC-Ep.js"), true ? __vite__mapDeps([16,1]) : void 0));
+const HomePage = reactExports.lazy(() => __vitePreload(() => import("./Home-C07Q39nw.js"), true ? __vite__mapDeps([0,1,2,3]) : void 0));
+const ShopPage = reactExports.lazy(() => __vitePreload(() => import("./Shop-DL5ybsV-.js"), true ? __vite__mapDeps([4,1,5,6,7,2]) : void 0));
+const ProductDetailPage = reactExports.lazy(() => __vitePreload(() => import("./ProductDetail-BKtNhdr9.js"), true ? __vite__mapDeps([8,1,5,6,7,2,9]) : void 0));
+const CartPage = reactExports.lazy(() => __vitePreload(() => import("./Cart-B9Bm7VXm.js"), true ? __vite__mapDeps([10,1]) : void 0));
+const CheckoutPage = reactExports.lazy(() => __vitePreload(() => import("./Checkout-CzyNs3B2.js"), true ? __vite__mapDeps([11,6,1,12,7]) : void 0));
+const LoginPage = reactExports.lazy(() => __vitePreload(() => import("./Login-jniEgKa9.js"), true ? __vite__mapDeps([13,1,3,7]) : void 0));
+const PaymentSuccessPage = reactExports.lazy(() => __vitePreload(() => import("./PaymentSuccess-DJGLXg02.js"), true ? __vite__mapDeps([14,1,12,9]) : void 0));
+const PaymentFailurePage = reactExports.lazy(() => __vitePreload(() => import("./PaymentFailure-DFEey5ev.js"), true ? __vite__mapDeps([15,1]) : void 0));
 const rootRoute = createRootRoute({
   component: () => /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingScreen, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) })
 });
@@ -39435,6 +39435,12 @@ const loginRoute = createRoute({
 const paymentSuccessRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/payment-success",
+  validateSearch: (search) => ({
+    orderId: search.orderId ?? "",
+    displayOrderId: search.displayOrderId ?? "",
+    paymentMethod: search.paymentMethod ?? "cod",
+    total: search.total ?? "0"
+  }),
   component: PaymentSuccessPage
 });
 const paymentFailureRoute = createRoute({
@@ -39755,85 +39761,83 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   ] }) })
 );
 export {
-  isValidTimeout as $,
-  ReadRequestType as A,
-  Principal$1 as B,
+  shouldThrowError as $,
+  UnexpectedErrorCode as A,
+  decode$2 as B,
   Certificate as C,
-  IDL as D,
+  pendingThenable as D,
   ExternalError as E,
-  MissingCanisterIdErrorCode as F,
-  encode$2 as G,
+  resolveEnabled as F,
+  shallowEqualObjects as G,
   HttpAgent as H,
   InputError as I,
-  UncertifiedRejectErrorCode as J,
-  isV3ResponseBody as K,
+  resolveStaleTime as J,
+  noop$7 as K,
   Link as L,
   MissingRootKeyErrorCode as M,
-  isV2ResponseBody as N,
-  UncertifiedRejectUpdateErrorCode as O,
+  environmentManager as N,
+  isValidTimeout as O,
   ProtocolError as P,
   QueryResponseStatus as Q,
   React$4 as R,
   Subscribable as S,
   TimeoutWaitingForResponseErrorCode as T,
   UnknownError as U,
-  UnexpectedErrorCode as V,
-  decode$2 as W,
-  pendingThenable as X,
-  resolveEnabled as Y,
-  resolveStaleTime as Z,
-  environmentManager as _,
+  timeUntilStale as V,
+  timeoutManager as W,
+  focusManager as X,
+  fetchState as Y,
+  replaceData as Z,
+  notifyManager as _,
   useSearch as a,
-  timeUntilStale as a0,
-  timeoutManager as a1,
-  focusManager as a2,
-  fetchState as a3,
-  replaceData as a4,
-  createActorWithConfig as a5,
-  Variant as a6,
-  Record as a7,
-  Opt as a8,
-  Vec as a9,
-  Service as aa,
-  Func as ab,
-  Text as ac,
-  Nat as ad,
-  Null as ae,
-  Int as af,
-  Principal2 as ag,
-  Bool as ah,
-  Nat8 as ai,
-  MotionConfigContext as aj,
-  isHTMLElement as ak,
-  useConstant as al,
-  PresenceContext as am,
-  usePresence as an,
-  useIsomorphicLayoutEffect as ao,
-  LayoutGroupContext as ap,
-  useRouterState as aq,
+  useQueryClient as a0,
+  useInternetIdentity as a1,
+  createActorWithConfig as a2,
+  Variant as a3,
+  Record as a4,
+  Opt as a5,
+  Vec as a6,
+  Service as a7,
+  Func as a8,
+  Text as a9,
+  Nat as aa,
+  Null as ab,
+  Int as ac,
+  Principal2 as ad,
+  Bool as ae,
+  Nat8 as af,
+  reactDomExports as ag,
+  MotionConfigContext as ah,
+  isHTMLElement as ai,
+  useConstant as aj,
+  PresenceContext as ak,
+  usePresence as al,
+  useIsomorphicLayoutEffect as am,
+  LayoutGroupContext as an,
+  useRouterState as ao,
   useParams as b,
   React$5 as c,
-  reactDomExports as d,
-  ReactDOM$2 as e,
-  useQueryClient as f,
-  getDefaultState as g,
-  hashKey as h,
-  noop$7 as i,
+  ReactDOM$2 as d,
+  useNavigate as e,
+  utf8ToBytes as f,
+  RequestStatusResponseStatus as g,
+  RequestStatusDoneNoReplyErrorCode as h,
+  RejectError as i,
   jsxRuntimeExports as j,
-  shouldThrowError as k,
-  useNavigate as l,
+  CertifiedRejectErrorCode as k,
+  lookupResultToBuffer as l,
   motion as m,
-  notifyManager as n,
-  useInternetIdentity as o,
-  utf8ToBytes as p,
-  lookupResultToBuffer as q,
+  UNREACHABLE_ERROR as n,
+  InvalidReadStateRequestErrorCode as o,
+  ReadRequestType as p,
+  Principal$1 as q,
   reactExports as r,
-  shallowEqualObjects as s,
-  RequestStatusResponseStatus as t,
+  IDL as s,
+  MissingCanisterIdErrorCode as t,
   ue as u,
-  RequestStatusDoneNoReplyErrorCode as v,
-  RejectError as w,
-  CertifiedRejectErrorCode as x,
-  UNREACHABLE_ERROR as y,
-  InvalidReadStateRequestErrorCode as z
+  encode$2 as v,
+  UncertifiedRejectErrorCode as w,
+  isV3ResponseBody as x,
+  isV2ResponseBody as y,
+  UncertifiedRejectUpdateErrorCode as z
 };

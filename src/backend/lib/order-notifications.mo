@@ -5,6 +5,7 @@ import Text "mo:core/Text";
 import Char "mo:core/Char";
 import OutCall "mo:caffeineai-http-outcalls/outcall";
 import OrderRequestTypes "../types/order-requests";
+import OrderTypes "../types/orders";
 import Common "../types/common";
 
 module {
@@ -136,6 +137,58 @@ module {
       "&apikey=CALLMEBOT_API_KEY";
     try {
       let _resp = await OutCall.httpGetRequest(url, [], transform);
+      true;
+    } catch (_) {
+      false;
+    };
+  };
+  // Send full order details email to kicks3099@gmail.com via EmailJS
+  public func sendFullOrderEmail(
+    orderId : Text,
+    customerName : Text,
+    customerPhone : Text,
+    shippingAddress : Text,
+    pincode : Text,
+    orderNotes : Text,
+    cartItems : [OrderTypes.CartItemInput],
+    totalInCents : Nat,
+    paymentMethod : Text,
+    orderDate : Text,
+    transform : OutCall.Transform,
+  ) : async Bool {
+    // Build items list as plain text
+    var itemsList = "";
+    for (item in cartItems.vals()) {
+      itemsList #= item.productName # " | Size: " # item.size # " | Qty: " # item.quantity.toText() # " | Price: Rs." # (item.priceInCents / 100).toText() # "\n";
+    };
+    let totalRupees = (totalInCents / 100).toText();
+    let templateParams =
+      "{" #
+      "\"order_id\":\"" # orderId # "\"," #
+      "\"customer_name\":\"" # customerName # "\"," #
+      "\"customer_phone\":\"" # customerPhone # "\"," #
+      "\"shipping_address\":\"" # shippingAddress # "\"," #
+      "\"pincode\":\"" # pincode # "\"," #
+      "\"order_notes\":\"" # orderNotes # "\"," #
+      "\"items\":\"" # itemsList # "\"," #
+      "\"total_amount\":\"Rs." # totalRupees # "\"," #
+      "\"payment_method\":\"" # paymentMethod # "\"," #
+      "\"order_date\":\"" # orderDate # "\"" #
+      "}";
+    let body =
+      "{" #
+      "\"service_id\":\"service_kicks\"," #
+      "\"template_id\":\"template_full_order\"," #
+      "\"user_id\":\"user_kicks_store\"," #
+      "\"accessToken\":\"kicks3099@gmail.com\"," #
+      "\"template_params\":" # templateParams #
+      "}";
+    let headers : [OutCall.Header] = [
+      { name = "Content-Type"; value = "application/json" },
+      { name = "origin"; value = "http://localhost" },
+    ];
+    try {
+      let _resp = await OutCall.httpPostRequest("https://api.emailjs.com/api/v1.0/email/send", headers, body, transform);
       true;
     } catch (_) {
       false;

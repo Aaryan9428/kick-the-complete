@@ -1,4 +1,5 @@
 import { useCartStore } from "@/stores/cartStore";
+import { useUIStore } from "@/stores/uiStore";
 import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Heart, Menu, Search, ShoppingCart, User, X } from "lucide-react";
@@ -11,6 +12,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const totalItems = useCartStore((s) => s.totalItems());
+  const openCart = useUIStore((s) => s.openCart);
   const { isAuthenticated } = useInternetIdentity();
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
@@ -90,19 +92,20 @@ export function Header() {
               <Heart className="w-4 h-4" />
             </Link>
 
-            <Link
-              to="/cart"
+            <button
+              type="button"
+              onClick={openCart}
               data-ocid="header.cart_button"
               className="relative w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-smooth rounded-lg hover:bg-muted/40"
               aria-label="Cart"
             >
               <ShoppingCart className="w-4 h-4" />
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                   {totalItems > 9 ? "9+" : totalItems}
                 </span>
               )}
-            </Link>
+            </button>
 
             <Link
               to="/login"

@@ -1,39 +1,5 @@
-import { j as jsxRuntimeExports, m as motion, L as Link, u as ue } from "./index-CQiv2YrY.js";
-import { c as createLucideIcon, u as useCartStore, L as Layout, B as Button } from "./button-DfzMutqC.js";
-import { S as ShoppingBag } from "./shopping-bag-CC5oXzFw.js";
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$2 = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$2);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1 = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
-];
-const Plus = createLucideIcon("plus", __iconNode$1);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode = [
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
-  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
-  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
-  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
-];
-const Trash2 = createLucideIcon("trash-2", __iconNode);
+import { j as jsxRuntimeExports, m as motion, L as Link, u as ue } from "./index-BepgGYDm.js";
+import { u as useCartStore, L as Layout, i as ShoppingBag, B as Button, M as Minus, P as Plus, T as Trash2 } from "./button-rcDW-ULO.js";
 function Cart() {
   const { items, removeItem, updateQuantity, totalPrice, totalItems } = useCartStore();
   const total = totalPrice();

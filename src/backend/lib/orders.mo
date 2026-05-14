@@ -1,6 +1,9 @@
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
 import Time "mo:core/Time";
+import Array "mo:core/Array";
+import Int "mo:core/Int";
+import Nat "mo:core/Nat";
 import OrderTypes "../types/orders";
 import Common "../types/common";
 
@@ -28,6 +31,13 @@ module {
       stripeSessionId;
       createdAt = now;
       updatedAt = now;
+      paymentMethod = null;
+      customerName = null;
+      customerPhone = null;
+      shippingAddress = null;
+      pincode = null;
+      orderNotes = null;
+      displayOrderId = null;
     };
     orders.add(id, order);
     order;
@@ -76,5 +86,51 @@ module {
       };
     };
     found;
+  };
+  public func createFullOrder(
+    orders : OrderMap,
+    state : CounterState,
+    caller : Principal,
+    cartItems : [OrderTypes.CartItemInput],
+    paymentMethod : OrderTypes.PaymentMethod,
+    customerName : Text,
+    customerPhone : Text,
+    shippingAddress : Text,
+    pincode : Text,
+    orderNotes : Text,
+    totalInCents : Nat,
+  ) : Nat {
+    let orderId = state.nextOrderId;
+    state.nextOrderId += 1;
+    let now = Time.now();
+    let displayId = "KICKS-" # (Int.abs(now) / 1_000_000_000 % 100000).toText() # "-" # orderId.toText();
+    let items : [OrderTypes.OrderItem] = cartItems.map<OrderTypes.CartItemInput, OrderTypes.OrderItem>(
+      func(ci) = {
+        productId = ci.productId;
+        productName = ci.productName;
+        quantity = ci.quantity;
+        priceInCents = ci.priceInCents;
+        size = ?ci.size;
+      }
+    );
+    let order : OrderTypes.Order = {
+      id = orderId;
+      userId = caller;
+      items = items;
+      totalInCents = totalInCents;
+      status = #pending;
+      stripeSessionId = null;
+      createdAt = now;
+      updatedAt = now;
+      paymentMethod = ?paymentMethod;
+      customerName = ?customerName;
+      customerPhone = ?customerPhone;
+      shippingAddress = ?shippingAddress;
+      pincode = ?pincode;
+      orderNotes = ?orderNotes;
+      displayOrderId = ?displayId;
+    };
+    orders.add(orderId, order);
+    orderId
   };
 };

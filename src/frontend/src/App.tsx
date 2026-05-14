@@ -69,6 +69,12 @@ const loginRoute = createRoute({
 const paymentSuccessRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/payment-success",
+  validateSearch: (search: Record<string, unknown>) => ({
+    orderId: (search.orderId as string) ?? "",
+    displayOrderId: (search.displayOrderId as string) ?? "",
+    paymentMethod: (search.paymentMethod as string) ?? "cod",
+    total: (search.total as string) ?? "0",
+  }),
   component: PaymentSuccessPage,
 });
 

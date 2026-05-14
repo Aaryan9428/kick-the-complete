@@ -1,12 +1,26 @@
 import Common "common";
 
 module {
+  public type PaymentMethod = {
+    #cod;
+    #phonepe;
+    #stripe;
+  };
+
+  public type CartItemInput = {
+    productId : Text;
+    productName : Text;
+    size : Text;
+    quantity : Nat;
+    priceInCents : Nat;
+  };
+
   public type OrderItem = {
     productId : Common.ProductId;
     productName : Text;
     priceInCents : Nat;
     quantity : Nat;
-    size : Text;
+    size : ?Text;
   };
 
   public type OrderStatus = {
@@ -26,5 +40,12 @@ module {
     stripeSessionId : ?Text;
     createdAt : Common.Timestamp;
     updatedAt : Common.Timestamp;
+    paymentMethod : ?PaymentMethod;
+    customerName : ?Text;
+    customerPhone : ?Text;
+    shippingAddress : ?Text;
+    pincode : ?Text;
+    orderNotes : ?Text;
+    displayOrderId : ?Text;
   };
 };

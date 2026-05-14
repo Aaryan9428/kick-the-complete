@@ -1,4 +1,4 @@
-// Version: 1.0.0
+// Version: 3.0.0
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
 type Internal__8484328<K, V> =
@@ -12,6 +12,27 @@ type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OldOrderItem__518217749 =
+  {
+    priceInCents : Nat;
+    productId : Text;
+    productName : Text;
+    quantity : Nat;
+    size : Text
+  };
+type OldOrderStatus__13175761 =
+  {#cancelled; #delivered; #paid; #pending; #shipped};
+type OldOrder__235915581 =
+  {
+    createdAt : Int;
+    id : Nat;
+    items : [OldOrderItem__518217749];
+    status : OldOrderStatus__13175761;
+    stripeSessionId : ?Text;
+    totalInCents : Nat;
+    updatedAt : Int;
+    userId : Principal
+  };
 type OrderId__197865225 = Nat;
 type OrderItem__241319351 =
   {
@@ -19,7 +40,7 @@ type OrderItem__241319351 =
     productId : ProductId__160010635;
     productName : Text;
     quantity : Nat;
-    size : Text
+    size : ?Text
   };
 type OrderRequest__324779619 =
   {
@@ -38,14 +59,22 @@ type OrderStatus__272730104 =
 type Order__141779993 =
   {
     createdAt : Timestamp__301639476;
+    customerName : ?Text;
+    customerPhone : ?Text;
+    displayOrderId : ?Text;
     id : OrderId__197865225;
     items : [OrderItem__241319351];
+    orderNotes : ?Text;
+    paymentMethod : ?PaymentMethod__972042942;
+    pincode : ?Text;
+    shippingAddress : ?Text;
     status : OrderStatus__272730104;
     stripeSessionId : ?Text;
     totalInCents : Nat;
     updatedAt : Timestamp__301639476;
     userId : UserId__158757552
   };
+type PaymentMethod__972042942 = {#cod; #phonepe; #stripe};
 type ProductId__160010635 = Text;
 type Product__750902660 =
   {
@@ -67,7 +96,27 @@ type StripeConfiguration__87721349 =
 type Timestamp__301639476 = Int;
 type UserId__158757552 = Principal;
 type UserRole__1073662873 = {#admin; #guest; #user};
-actor {
+actor ({
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable orderRequestState : {var nextId : Nat};
+  stable orderRequestStore :
+    {
+      var root : Node__46230540<OrderId__197865225, OrderRequest__324779619>;
+      var size : Nat__490723111
+    };
+  in orderState : {var nextOrderId : Nat};
+  in var orderStore : Map__605269027<Nat, OldOrder__235915581>;
+  stable productCatalog :
+    {
+      var root : Node__46230540<Text, Product__750902660>;
+      var size : Nat__490723111
+    };
+  stable var stripeConfiguration : ?StripeConfiguration__87721349
+}, {
   stable accessControlState :
     {
       var adminAssigned : Bool;
@@ -91,4 +140,4 @@ actor {
       var size : Nat__490723111
     };
   stable var stripeConfiguration : ?StripeConfiguration__87721349
-};
+});

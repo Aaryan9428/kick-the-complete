@@ -1,64 +1,155 @@
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Link } from "@tanstack/react-router";
-import { CheckCircle2, Package } from "lucide-react";
+import { Link, useSearch } from "@tanstack/react-router";
+import { Banknote, CheckCircle2, Package, Smartphone } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function PaymentSuccess() {
+  const search = useSearch({ strict: false }) as {
+    orderId?: string;
+    displayOrderId?: string;
+    paymentMethod?: string;
+    total?: string;
+  };
+
+  const { displayOrderId, paymentMethod, total } = search;
+  const formattedTotal = total
+    ? `₹${Number(total).toLocaleString("en-IN")}`
+    : null;
+  const isPhonePe = paymentMethod === "phonepe";
+  const isCod = paymentMethod === "cod";
+
   return (
     <Layout>
       <div
-        className="container mx-auto px-4 py-24 text-center"
+        className="min-h-screen bg-[#050508] flex items-center justify-center px-4 py-24"
         data-ocid="payment_success.page"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-md mx-auto"
+          className="max-w-md w-full text-center"
         >
+          {/* Animated checkmark */}
           <motion.div
-            className="w-20 h-20 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center mx-auto mb-6"
-            animate={{ scale: [1, 1.05, 1] }}
+            className="w-24 h-24 rounded-full mx-auto mb-8 flex items-center justify-center relative"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(236,72,153,0.2) 0%, rgba(168,85,247,0.1) 100%)",
+              border: "1px solid rgba(236,72,153,0.3)",
+            }}
+            animate={{ scale: [1, 1.04, 1] }}
             transition={{
-              duration: 2,
+              duration: 2.5,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
             }}
           >
-            <CheckCircle2 className="w-10 h-10 text-accent" />
+            <CheckCircle2 className="w-12 h-12 text-pink-400" />
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{ border: "2px solid rgba(236,72,153,0.4)" }}
+              animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
+              transition={{
+                duration: 2.5,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+            />
           </motion.div>
 
-          <h1 className="text-3xl font-display font-black text-foreground mb-3">
-            Order Confirmed!
-          </h1>
-          <p className="text-muted-foreground mb-8 leading-relaxed">
-            Your payment was successful. Your premium kicks are being prepared
-            for dispatch.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <h1 className="text-3xl md:text-4xl font-display font-black text-white mb-2">
+              Order Placed Successfully!
+            </h1>
+            <p className="text-gray-400 mb-6">
+              Thank you for shopping with Kicks.
+            </p>
+          </motion.div>
 
-          <div className="glass-card p-6 mb-8 flex items-center gap-4">
-            <Package className="w-8 h-8 text-accent shrink-0" />
-            <div className="text-left">
-              <div className="font-semibold text-foreground text-sm">
-                What happens next?
+          {displayOrderId && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="glass-card p-5 mb-5 text-left"
+              data-ocid="payment_success.order_id_card"
+            >
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
+                Order ID
+              </p>
+              <p className="text-xl font-display font-black bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                {displayOrderId}
+              </p>
+              {formattedTotal && (
+                <p className="text-sm text-gray-400 mt-2">
+                  Amount paid:{" "}
+                  <span className="text-white font-bold">{formattedTotal}</span>
+                </p>
+              )}
+            </motion.div>
+          )}
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="glass-card p-5 mb-8 text-left"
+            data-ocid="payment_success.next_steps_card"
+          >
+            <div className="flex items-start gap-4">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                  isPhonePe ? "bg-purple-500/20" : "bg-emerald-500/20"
+                }`}
+              >
+                {isPhonePe ? (
+                  <Smartphone className="w-5 h-5 text-purple-400" />
+                ) : isCod ? (
+                  <Banknote className="w-5 h-5 text-emerald-400" />
+                ) : (
+                  <Package className="w-5 h-5 text-pink-400" />
+                )}
               </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                You'll receive a confirmation email. Delivery in 3-5 business
-                days.
+              <div>
+                <div className="font-semibold text-white text-sm mb-1">
+                  {isPhonePe
+                    ? "PhonePe Payment Received"
+                    : isCod
+                      ? "Cash on Delivery"
+                      : "What happens next?"}
+                </div>
+                <div className="text-xs text-gray-400 leading-relaxed">
+                  {isPhonePe
+                    ? "Payment received! Your order is being processed. Our team will contact you shortly to confirm dispatch."
+                    : isCod
+                      ? "Your order will arrive in 5\u20137 business days. Our team will contact you shortly on WhatsApp or phone to confirm your delivery."
+                      : "Your order has been placed. You will receive a confirmation shortly. Delivery in 5\u20137 business days."}
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <Link
-            to="/shop"
-            search={{ category: undefined, brand: undefined, q: undefined }}
-            data-ocid="payment_success.continue_shopping_button"
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-glow-accent">
-              Continue Shopping
-            </Button>
-          </Link>
+            <Link
+              to="/shop"
+              search={{ category: undefined, brand: undefined, q: undefined }}
+              data-ocid="payment_success.continue_shopping_button"
+            >
+              <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-bold px-8 py-3 h-auto rounded-xl shadow-[0_0_30px_rgba(236,72,153,0.4)] hover:shadow-[0_0_40px_rgba(236,72,153,0.6)] transition-all duration-200">
+                Continue Shopping
+              </Button>
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
     </Layout>

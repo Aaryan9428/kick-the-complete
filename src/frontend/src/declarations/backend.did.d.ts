@@ -10,19 +10,33 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface CartItemInput {
+  'size' : string,
+  'productId' : string,
+  'productName' : string,
+  'quantity' : bigint,
+  'priceInCents' : bigint,
+}
 export interface Order {
   'id' : OrderId,
+  'customerName' : [] | [string],
   'status' : OrderStatus,
+  'paymentMethod' : [] | [PaymentMethod],
+  'customerPhone' : [] | [string],
   'userId' : UserId,
   'createdAt' : Timestamp,
   'updatedAt' : Timestamp,
   'totalInCents' : bigint,
+  'shippingAddress' : [] | [string],
   'items' : Array<OrderItem>,
+  'pincode' : [] | [string],
   'stripeSessionId' : [] | [string],
+  'orderNotes' : [] | [string],
+  'displayOrderId' : [] | [string],
 }
 export type OrderId = bigint;
 export interface OrderItem {
-  'size' : string,
+  'size' : [] | [string],
   'productId' : ProductId,
   'productName' : string,
   'quantity' : bigint,
@@ -33,6 +47,9 @@ export type OrderStatus = { 'shipped' : null } |
   { 'pending' : null } |
   { 'paid' : null } |
   { 'delivered' : null };
+export type PaymentMethod = { 'cod' : null } |
+  { 'stripe' : null } |
+  { 'phonepe' : null };
 export interface Product {
   'id' : string,
   'name' : string,
@@ -118,6 +135,22 @@ export interface _SERVICE {
   'listProducts' : ActorMethod<[], Array<Product>>,
   'listProductsByBrand' : ActorMethod<[string], Array<Product>>,
   'listProductsByCategory' : ActorMethod<[string], Array<Product>>,
+  'placeFullOrder' : ActorMethod<
+    [
+      {
+        'customerName' : string,
+        'paymentMethod' : PaymentMethod,
+        'customerPhone' : string,
+        'cartItems' : Array<CartItemInput>,
+        'totalInCents' : bigint,
+        'shippingAddress' : string,
+        'pincode' : string,
+        'orderNotes' : string,
+      },
+    ],
+    { 'ok' : { 'orderId' : bigint, 'displayOrderId' : string } } |
+      { 'err' : string }
+  >,
   'placeOrder' : ActorMethod<[Array<OrderItem>, bigint], Order>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
   'submitOrderRequest' : ActorMethod<

@@ -1,10 +1,10 @@
-import { b as useParams, r as reactExports, j as jsxRuntimeExports, L as Link, m as motion, u as ue } from "./index-CQiv2YrY.js";
-import { c as createLucideIcon, u as useCartStore, L as Layout, B as Button, a as ShoppingCart, H as Heart } from "./button-DfzMutqC.js";
-import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-j7epipU7.js";
-import { b as getProductById, P as PRODUCTS, B as Badge } from "./products-S1TnAfQC.js";
-import { P as Package } from "./package-9UKpTSxu.js";
-import "./backend-BHlQehYT.js";
-import "./loader-circle-CxQ5ylIP.js";
+import { b as useParams, r as reactExports, j as jsxRuntimeExports, L as Link, m as motion, u as ue } from "./index-BepgGYDm.js";
+import { c as createLucideIcon, u as useCartStore, b as useUIStore, L as Layout, B as Button, d as ShoppingCart, H as Heart } from "./button-rcDW-ULO.js";
+import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-9QYfpook.js";
+import { b as getProductById, P as PRODUCTS, B as Badge } from "./products-U2Q5Zptf.js";
+import { P as Package } from "./package-C4lRBRd-.js";
+import "./index-DBimtIV6.js";
+import "./loader-circle-Cpv7GnKP.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -56,6 +56,7 @@ function ProductDetail() {
   const [selectedImage, setSelectedImage] = reactExports.useState(0);
   const [orderOpen, setOrderOpen] = reactExports.useState(false);
   const addItem = useCartStore((s) => s.addItem);
+  const openCart = useUIStore((s) => s.openCart);
   const { toggle, has } = useWishlistStore();
   if (!product) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Layout, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -93,6 +94,7 @@ function ProductDetail() {
       size: selectedSize,
       quantity: 1
     });
+    openCart();
     ue.success(`${product.name} added to cart!`);
   };
   const related = PRODUCTS.filter(
@@ -125,7 +127,11 @@ function ProductDetail() {
               {
                 src: product.imagePaths[selectedImage] ?? product.imagePaths[0],
                 alt: product.name,
-                className: "w-full h-full object-cover"
+                className: "w-full h-full object-cover",
+                loading: "lazy",
+                onError: (e) => {
+                  e.target.src = "/assets/images/placeholder.svg";
+                }
               }
             ) }),
             product.imagePaths.length > 1 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2", children: product.imagePaths.map((path, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -140,7 +146,11 @@ function ProductDetail() {
                   {
                     src: path,
                     alt: "",
-                    className: "w-full h-full object-cover"
+                    className: "w-full h-full object-cover",
+                    loading: "lazy",
+                    onError: (e) => {
+                      e.target.src = "/assets/images/placeholder.svg";
+                    }
                   }
                 )
               },

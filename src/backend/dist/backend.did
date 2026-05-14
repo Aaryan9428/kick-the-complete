@@ -80,6 +80,12 @@ type Product =
    sizes: vec text;
    stock: nat;
  };
+type PaymentMethod = 
+ variant {
+   cod;
+   phonepe;
+   stripe;
+ };
 type OrderStatus = 
  variant {
    cancelled;
@@ -94,19 +100,34 @@ type OrderItem =
    productId: ProductId;
    productName: text;
    quantity: nat;
-   size: text;
+   size: opt text;
  };
 type OrderId = nat;
 type Order = 
  record {
    createdAt: Timestamp;
+   customerName: opt text;
+   customerPhone: opt text;
+   displayOrderId: opt text;
    id: OrderId;
    items: vec OrderItem;
+   orderNotes: opt text;
+   paymentMethod: opt PaymentMethod;
+   pincode: opt text;
+   shippingAddress: opt text;
    status: OrderStatus;
    stripeSessionId: opt text;
    totalInCents: nat;
    updatedAt: Timestamp;
    userId: UserId;
+ };
+type CartItemInput = 
+ record {
+   priceInCents: nat;
+   productId: text;
+   productName: text;
+   quantity: nat;
+   size: text;
  };
 service : {
   _initializeAccessControl: () -> ();
@@ -127,6 +148,24 @@ service : {
   listProducts: () -> (vec Product) query;
   listProductsByBrand: (brand: text) -> (vec Product) query;
   listProductsByCategory: (category: text) -> (vec Product) query;
+  placeFullOrder: (payload:
+   record {
+     cartItems: vec CartItemInput;
+     customerName: text;
+     customerPhone: text;
+     orderNotes: text;
+     paymentMethod: PaymentMethod;
+     pincode: text;
+     shippingAddress: text;
+     totalInCents: nat;
+   }) ->
+   (variant {
+      err: text;
+      ok: record {
+            displayOrderId: text;
+            orderId: nat;
+          };
+    });
   placeOrder: (items: vec OrderItem, totalInCents: nat) -> (Order);
   setStripeConfiguration: (config: StripeConfiguration) -> ();
   submitOrderRequest: (customerName: text, phone: text, productName: 

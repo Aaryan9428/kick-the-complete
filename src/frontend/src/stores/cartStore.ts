@@ -5,7 +5,11 @@ import { persist } from "zustand/middleware";
 interface CartState {
   items: CartItem[];
   addItem: (item: CartItem) => void;
+  /** @alias addItem — accepts same CartItem shape */
+  add: (item: CartItem) => void;
   removeItem: (productId: string, size: string) => void;
+  /** @alias removeItem */
+  remove: (productId: string, size: string) => void;
   updateQuantity: (productId: string, size: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: () => number;
@@ -56,6 +60,9 @@ export const useCartStore = create<CartState>()(
         })),
 
       clearCart: () => set({ items: [] }),
+
+      add: (item) => get().addItem(item),
+      remove: (productId, size) => get().removeItem(productId, size),
 
       totalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
 

@@ -1,69 +1,71 @@
-# Design Brief
+# Design System — Kicks The Complete
 
 ## Direction
 
-Kick The Complete — Luxury dark sneaker ecommerce with cinematic athleticism, aggressive-premium brand positioning, and Nike/Jordan-inspired layouts.
+Luxury dark sneaker ecommerce with cinematic depth, aggressive-premium branding, pink-to-purple gradient accents, and refined athletic aesthetics. Minimalist hero with maximum impact. Glassmorphic UI cards layered with neon glow effects. Premium independent sneaker brand positioning.
 
 ## Tone
 
-Aggressive luxury: sporty confidence wrapped in refined dark aesthetics — demanding, exclusive, high-fidelity motion, white-on-navy contrast precision.
+Confident luxury: bold headlines, restrained decoration, cinematic motion, high contrast white-on-navy, and neon blue/magenta accents defining premium athleticism without loudness.
 
 ## Differentiation
 
-Parallax hero with rotating 3D sneaker showcase, scroll-triggered cinematic reveals, floating particle ambience, and neon blue accent restraint creating unforgettable premium athleticism.
+Pink-to-purple gradient hero text, parallax scroll reveals, floating animations, glassmorphic depth layering, and signature neon glow outlines on product imagery — unmistakably premium luxury sneaker brand.
 
 ## Color Palette
 
-| Token      | OKLCH       | Role                           |
-| ---------- | ----------- | ------------------------------ |
-| background | 0.09 0 0    | Deep navy, primary surface     |
-| foreground | 0.98 0 0    | White, critical text contrast  |
-| card       | 0.14 0 0    | Elevated card background       |
-| primary    | 0.62 0.25 22| Red accent, CTA, urgency       |
-| accent     | 0.72 0.22 264| Neon blue, secondary highlights|
-| muted      | 0.24 0 0    | Subtle surfaces, dividers      |
+| Token      | OKLCH        | Purpose                         |
+| ---------- | ------------ | ------------------------------- |
+| background | 0.09 0 0     | Deep navy primary surface       |
+| foreground | 0.98 0 0     | White critical text             |
+| card       | 0.14 0 0     | Elevated glassmorphic layers    |
+| primary    | 0.62 0.25 22 | Magenta/red CTA & accents       |
+| accent     | 0.72 0.22 264| Neon blue highlights & glows    |
+| muted      | 0.24 0 0     | Subtle surfaces & dividers      |
 
 ## Typography
 
-- Display: Space Grotesk — bold tracked headlines, 60-0 letterspacing uppercase, hero impact
-- Body: DM Sans — refined copy, product descriptions, UI labels
-- Scale: hero text-7xl bold, h2 text-5xl bold tracked, label text-sm uppercase, body text-base
+- Display: Space Grotesk — bold 60px+ hero, -3% letterspacing, premium headlines
+- Body: DM Sans — refined copy, product labels, elevated 1.6 leading
+- Scale: hero text-9xl bold, h2 text-6xl bold, label text-sm uppercase, body text-base
 
 ## Elevation & Depth
 
-Glassmorphic cards with subtle backdrop-blur, layered shadow depth (sm/md/glow variants), dark-on-dark foreground hierarchy via lightness offset and accent glow outlines.
+Glassmorphism with 20px backdrop-blur, layered shadow hierarchy (elevation-sm/md/lg), dark-on-dark via lightness offset. Neon glow outlines on interactive elements. Inset highlights on premium cards.
 
 ## Structural Zones
 
-| Zone    | Background       | Border                | Notes                                |
-| ------- | ---------------- | --------------------- | ------------------------------------ |
-| Header  | card/30 glass    | border/20 accent edge | Sticky, frosted, neon underline      |
-| Content | background solid | —                     | Alternating card zones for rhythm    |
-| Footer  | card/40          | border accent bottom  | Mirrored footer with accent emphasis |
+| Zone    | Background          | Border                    | Notes                                   |
+| ------- | ------------------- | ------------------------- | --------------------------------------- |
+| Header  | glass-card / 50%    | border / 25% accent edge  | Sticky frosted header with neon accent  |
+| Hero    | background + glow   | —                         | Full viewport cinematic parallax effect |
+| Content | background / card   | —                         | Alternating zones with spacing rhythm  |
+| Footer  | card / 40%          | border accent top         | Mirrored footer with accent emphasis    |
 
 ## Spacing & Rhythm
 
-Large sectional gaps (6rem+), card padding 2rem, typography leading 1.2 display/1.6 body, micro-spacing 0.5rem–1rem for control density.
+Section gaps 7rem+ (space-section utility), card padding 2rem/3rem, display line-height 0.95, body line-height 1.6, letter-spacing adjusted per tier. Micro-spacing 0.25rem–1rem for density control.
 
 ## Component Patterns
 
-- Buttons: red primary bg-primary text-white text-sm uppercase tracking-widest, hover scale-105 shadow-glow-accent, transition-smooth
-- Cards: glass-card utility + hover:shadow-md transition, 3D perspective on product cards
-- Badges: accent bg-accent/20 border-accent text-accent font-semibold rounded-full px-3 py-1
+- Buttons: bg-primary text-white uppercase semibold px-8 py-4, shadow-glow-accent, hover:scale-102 translate-y-[-2px], transition-smooth
+- Cards: glass-card-premium with hover states, inset top border, elevation shadows
+- Badges: bg-accent/15 border-accent/50 text-accent uppercase text-xs px-4 py-2 rounded-full
 
-## Motion
+## Motion & Animation
 
-- Entrance: fade-in 0.5s easing, scroll-reveal stagger 100ms per element
-- Hover: scale 1.05 on cards, shadow-glow-blue pulse, text-accent glow highlight
-- Decorative: floating particles ambient, pulse-glow 2s infinite on accent elements, parallax scrolling hero
+- Entrance: fade-in 0.6s, slide-in-up 0.7s easing, staggered 100ms per child
+- Hover: scale 1.02 + translate-y-[-2px] on cards, glow pulse 2s on accent elements
+- Decorative: float 4s infinite with subtle rotation, parallax hero 60fps, gradient-shift 8s on backgrounds
 
 ## Constraints
 
-- No generic Tailwind shadows — use custom glow and elevated depth variants only
-- No purple, orange, or warm tones — navy + red + blue only
-- Text contrast minimum AA+ on all surfaces — test white on card/muted backgrounds
-- Animations 60fps smooth — prefer CSS transforms over paint-heavy effects
+- Shadows: only custom elevation & glow variants — no default Tailwind shadows
+- Palette: navy + magenta + blue only — no orange, purple, or warm tones
+- Contrast: AA+ white on all card/muted backgrounds
+- Performance: CSS transforms & GPU acceleration, no heavy paint effects
+- Font: Only Space Grotesk (display) + DM Sans (body) + Geist Mono (code)
 
 ## Signature Detail
 
-Neon blue glow outline on hero product imagery with parallax depth layers — unmistakably premium sneaker luxury, borrowed from high-end product showcase aesthetics.
+Pink-to-purple gradient text on hero "KICKS" headline with soft cinematic glow, paired with refined uppercase subheading. Neon blue/magenta glow outlines on product imagery create luxury depth signature.

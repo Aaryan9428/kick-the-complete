@@ -48,6 +48,19 @@
     --sidebar-accent-foreground: 0.25 0 0;
     --sidebar-border: 0.9 0 0;
     --sidebar-ring: 0.35 0 0;
+
+    /* Luxury gradient properties */
+    --gradient-primary: linear-gradient(
+      135deg,
+      #f472b6 0%,
+      #a855f7 50%,
+      #7c3aed 100%
+    );
+    --gradient-subtle: linear-gradient(
+      135deg,
+      rgba(244, 114, 182, 0.1) 0%,
+      rgba(168, 85, 247, 0.1) 100%
+    );
   }
 
   .dark {
@@ -98,9 +111,30 @@
   body {
     @apply bg-background text-foreground font-body antialiased;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Fonts loaded via Google Fonts CDN in index.html */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050508;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #f472b6, #7c3aed);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ec4899, #6d28d9);
+}
+
 @layer utilities {
   .glass-card {
     background: oklch(var(--card) / 0.5);
@@ -119,7 +153,40 @@
   .section-heading {
     @apply text-3xl md:text-5xl font-display font-bold tracking-tight text-foreground;
   }
+
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Luxury gradient text */
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Section rhythm */
+  .section-padding {
+    padding: 5rem 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-padding {
+      padding: 6rem 2rem;
+    }
+  }
+
+  /* Premium glassmorphism */
+  .glass-premium {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* GPU acceleration hint */
+  .will-change-transform {
+    will-change: transform;
   }
 }

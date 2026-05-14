@@ -135,5 +135,15 @@ export const mockBackend: backendInterface = {
     _address: string,
     _note: string,
   ) => ({ __kind__: "ok" as const, ok: BigInt(1) }),
+  placeFullOrder: async (_payload: {
+    customerName: string;
+    paymentMethod: unknown;
+    customerPhone: string;
+    cartItems: unknown[];
+    totalInCents: bigint;
+    shippingAddress: string;
+    pincode: string;
+    orderNotes: string;
+  }) => ({ __kind__: "ok" as const, ok: { orderId: BigInt(1), displayOrderId: "KICKS-12345-1" } }),
   _initializeAccessControl: async () => undefined,
 };

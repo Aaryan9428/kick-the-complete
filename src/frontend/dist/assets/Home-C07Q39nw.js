@@ -1,7 +1,7 @@
-import { j as jsxRuntimeExports, m as motion, L as Link, u as ue } from "./index-CQiv2YrY.js";
-import { c as createLucideIcon, L as Layout, B as Button } from "./button-DfzMutqC.js";
-import { g as getFeaturedProducts, B as Badge, P as PRODUCTS } from "./products-S1TnAfQC.js";
-import { A as ArrowRight } from "./arrow-right-DgopGQxq.js";
+import { j as jsxRuntimeExports, m as motion, L as Link, u as ue } from "./index-BepgGYDm.js";
+import { c as createLucideIcon, L as Layout, B as Button } from "./button-rcDW-ULO.js";
+import { g as getFeaturedProducts, B as Badge, P as PRODUCTS } from "./products-U2Q5Zptf.js";
+import { A as ArrowRight } from "./arrow-right-Dm1O90fu.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -110,7 +110,7 @@ function Home() {
       "section",
       {
         "data-ocid": "home.hero_section",
-        className: "relative min-h-screen flex flex-col items-center justify-center overflow-hidden",
+        className: "relative min-h-screen flex flex-col items-center justify-center overflow-hidden overflow-x-hidden",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute inset-0", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -119,7 +119,8 @@ function Home() {
                 src: "/assets/snapchat-1592945222-019e0725-6adb-703a-b1fc-8e3c54af6bc4.jpg",
                 alt: "",
                 className: "w-full h-full object-cover opacity-25",
-                "aria-hidden": "true"
+                "aria-hidden": "true",
+                loading: "lazy"
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -176,6 +177,7 @@ function Home() {
               initial: { opacity: 0, y: 40 },
               animate: { opacity: 1, y: 0 },
               transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+              style: { willChange: "transform" },
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Badge,
@@ -185,22 +187,8 @@ function Home() {
                     children: "New Collection 2026"
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-display font-black tracking-tight text-foreground mb-1 leading-none", children: "KICK THE" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "h1",
-                  {
-                    className: "text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-display font-black tracking-tight mb-6 leading-none",
-                    style: {
-                      background: "linear-gradient(135deg, oklch(0.98 0 0) 0%, oklch(0.62 0.25 22) 45%, oklch(0.72 0.22 264) 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text"
-                    },
-                    children: "COMPLETE"
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base md:text-xl text-muted-foreground max-w-2xl mx-auto mb-2 leading-relaxed", children: "Premium Sneakers. Elite Style." }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm md:text-base text-muted-foreground/70 max-w-xl mx-auto mb-10", children: "Step Into Greatness — curated for those who demand the absolute best." }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "gradient-text text-[80px] sm:text-[120px] md:text-[180px] lg:text-[220px] font-display font-black tracking-tighter leading-none mb-2", children: "KICKS" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-lg md:text-2xl font-light tracking-[0.3em] text-gray-300 uppercase mt-4 mb-10", children: "THE COMPLETE SNEAKER STORE" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row items-center justify-center gap-4", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     Link,
@@ -212,7 +200,7 @@ function Home() {
                         Button,
                         {
                           size: "lg",
-                          className: "bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group",
+                          className: "bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group hover:shadow-glow-purple transition-smooth",
                           style: { boxShadow: "0 0 30px oklch(0.62 0.25 22 / 0.4)" },
                           children: [
                             "Shop Now",
@@ -313,7 +301,7 @@ function Home() {
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs font-semibold tracking-[0.25em] uppercase text-primary mb-2", children: "Handpicked" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "section-heading", children: "Featured Drops" })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "section-heading gradient-text", children: "Featured Drops" })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   Link,
@@ -339,7 +327,7 @@ function Home() {
               viewport: { once: true },
               transition: { duration: 0.5, delay: i * 0.1 },
               "data-ocid": `home.featured_item.${i + 1}`,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/product/$id", params: { id: product.id }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-blue", children: [
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/product/$id", params: { id: product.id }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative aspect-square overflow-hidden bg-muted/30", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "img",

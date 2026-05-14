@@ -28,7 +28,7 @@ export interface TransformationOutput {
     headers: Array<http_header>;
 }
 export interface OrderItem {
-    size: string;
+    size?: string;
     productId: ProductId;
     productName: string;
     quantity: bigint;
@@ -36,13 +36,20 @@ export interface OrderItem {
 }
 export interface Order {
     id: OrderId;
+    customerName?: string;
     status: OrderStatus;
+    paymentMethod?: PaymentMethod;
+    customerPhone?: string;
     userId: UserId;
     createdAt: Timestamp;
     updatedAt: Timestamp;
     totalInCents: bigint;
+    shippingAddress?: string;
     items: Array<OrderItem>;
+    pincode?: string;
     stripeSessionId?: string;
+    orderNotes?: string;
+    displayOrderId?: string;
 }
 export interface http_header {
     value: string;
@@ -60,6 +67,13 @@ export interface ShoppingItem {
     quantity: bigint;
     priceInCents: bigint;
     productDescription: string;
+}
+export interface CartItemInput {
+    size: string;
+    productId: string;
+    productName: string;
+    quantity: bigint;
+    priceInCents: bigint;
 }
 export interface TransformationInput {
     context: Uint8Array;
@@ -104,6 +118,11 @@ export enum OrderStatus {
     paid = "paid",
     delivered = "delivered"
 }
+export enum PaymentMethod {
+    cod = "cod",
+    stripe = "stripe",
+    phonepe = "phonepe"
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -126,6 +145,25 @@ export interface backendInterface {
     listProducts(): Promise<Array<Product>>;
     listProductsByBrand(brand: string): Promise<Array<Product>>;
     listProductsByCategory(category: string): Promise<Array<Product>>;
+    placeFullOrder(payload: {
+        customerName: string;
+        paymentMethod: PaymentMethod;
+        customerPhone: string;
+        cartItems: Array<CartItemInput>;
+        totalInCents: bigint;
+        shippingAddress: string;
+        pincode: string;
+        orderNotes: string;
+    }): Promise<{
+        __kind__: "ok";
+        ok: {
+            orderId: bigint;
+            displayOrderId: string;
+        };
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     placeOrder(items: Array<OrderItem>, totalInCents: bigint): Promise<Order>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     submitOrderRequest(customerName: string, phone: string, productName: string, shoeSize: string, quantity: bigint, address: string, note: string): Promise<{

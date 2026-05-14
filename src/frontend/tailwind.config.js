@@ -16,6 +16,32 @@ export default {
     },
     extend: {
       colors: {
+        pink: {
+          50:  "#fdf2f8",
+          100: "#fce7f3",
+          200: "#fbcfe8",
+          300: "#f9a8d4",
+          400: "#f472b6",
+          500: "#ec4899",
+          600: "#db2777",
+          700: "#be185d",
+          800: "#9d174d",
+          900: "#831843",
+          950: "#500724",
+        },
+        purple: {
+          50:  "#faf5ff",
+          100: "#f3e8ff",
+          200: "#e9d5ff",
+          300: "#d8b4fe",
+          400: "#c084fc",
+          500: "#a855f7",
+          600: "#9333ea",
+          700: "#7c3aed",
+          800: "#6b21a8",
+          900: "#581c87",
+          950: "#3b0764",
+        },
         border: "oklch(var(--border))",
         input: "oklch(var(--input))",
         ring: "oklch(var(--ring) / <alpha-value>)",
@@ -83,6 +109,10 @@ export default {
         md: '0 8px 24px 0 rgba(0, 0, 0, 0.4)',
         'glow-accent': '0 0 30px 0 rgba(239, 68, 68, 0.3)',
         'glow-blue': '0 0 40px 0 rgba(59, 130, 246, 0.25)',
+        'glow-pink': '0 0 40px 0 rgba(244, 114, 182, 0.35)',
+        'glow-purple': '0 0 40px 0 rgba(168, 85, 247, 0.35)',
+        'glow-luxury': '0 0 60px 0 rgba(168, 85, 247, 0.2)',
+        subtle: '0 2px 8px 0 rgba(0, 0, 0, 0.25)',
       },
       keyframes: {
         "accordion-down": {
@@ -105,6 +135,14 @@ export default {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
+        "slide-up": {
+          "0%":   { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "shimmer": {
+          "0%":   { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -112,6 +150,12 @@ export default {
         "float": "float 3s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "fade-in": "fade-in 0.5s ease-out",
+        "slide-up": "slide-up 0.5s ease-out",
+        "shimmer": "shimmer 2s linear infinite",
+      },
+      backgroundImage: {
+        "gradient-luxury": "linear-gradient(135deg, #f472b6 0%, #a855f7 50%, #7c3aed 100%)",
+        "gradient-dark":   "linear-gradient(135deg, #050508 0%, #0a0a0f 50%, #050508 100%)",
       },
     },
   },

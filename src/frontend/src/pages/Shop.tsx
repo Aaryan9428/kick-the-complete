@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BRANDS, CATEGORIES, PRODUCTS } from "@/data/products";
 import { useCartStore } from "@/stores/cartStore";
+import { useUIStore } from "@/stores/uiStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { useSearch } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
@@ -26,6 +27,7 @@ export default function Shop() {
 
   const { toggle, has } = useWishlistStore();
   const addItem = useCartStore((s) => s.addItem);
+  const openCart = useUIStore((s) => s.openCart);
   const [orderProduct, setOrderProduct] = useState<{
     id: string;
     name: string;
@@ -65,6 +67,7 @@ export default function Shop() {
       size: product.sizes[Math.floor(product.sizes.length / 2)],
       quantity: 1,
     });
+    openCart();
     toast.success(`${product.name} added to cart`);
   };
 
@@ -187,7 +190,7 @@ export default function Shop() {
                 transition={{ duration: 0.4, delay: Math.min(i * 0.05, 0.4) }}
                 data-ocid={`shop.product_item.${i + 1}`}
               >
-                <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-blue relative">
+                <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink relative">
                   {/* Wishlist */}
                   <button
                     type="button"
@@ -219,6 +222,10 @@ export default function Shop() {
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src =
+                            "/assets/images/placeholder.svg";
+                        }}
                       />
                       {product.badge && (
                         <div className="absolute top-2 left-2">

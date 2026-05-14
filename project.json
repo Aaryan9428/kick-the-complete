@@ -1,27 +1,28 @@
 {
-  "overview": "Kick The Complete is a world-class luxury sneaker ecommerce website for a premium sneaker brand. Features a cinematic dark aesthetic with red accents, real product photos from the store, and full Stripe payment processing.",
+  "overview": "Kicks The Complete Sneakers Store — a luxury cinematic ecommerce website for premium sneakers. Features a full shopping cart with slide-in drawer, complete checkout with Cash on Delivery and PhonePe UPI payment options, order notifications to the store owner via email, and a premium dark theme with pink-to-purple gradient accents.",
   "features": [
-    "Cinematic hero with store photos",
-    "Full product catalog with real sneaker photos",
-    "Shop with brand/price/search filtering",
-    "Product detail with size selection",
-    "Zustand-powered shopping cart",
-    "Real Stripe payment processing",
-    "Internet Identity login",
-    "Mobile-first luxury animations",
-    "Glassmorphism and glow effects",
-    "Scroll-triggered cinematic reveals"
+    "Luxury cinematic dark theme with pink-to-purple gradients",
+    "Slide-in cart drawer with quantity management and live totals",
+    "Full checkout with COD and PhonePe UPI payment options",
+    "PhonePe payment screen with UPI ID and payment instructions",
+    "Order notifications emailed to store owner on every purchase",
+    "Order success page with generated order ID",
+    "15+ premium sneaker products with sizes and pricing in INR",
+    "Fully responsive mobile-first design",
+    "Smooth Framer Motion animations throughout",
+    "Hero section with KICKS in luxury gradient typography"
   ],
   "category": "ecommerce",
   "tags": [
     "sneakers",
-    "luxury",
     "ecommerce",
-    "dark-theme",
-    "stripe",
-    "premium",
+    "luxury",
     "fashion",
-    "animated"
+    "mobile-first",
+    "dark-theme",
+    "india",
+    "upi",
+    "cod"
   ],
-  "last_updated": "2026-05-08T10:36:06.388Z"
+  "last_updated": "2026-05-14T16:25:49.405Z"
 }

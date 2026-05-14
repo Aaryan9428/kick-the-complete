@@ -74,7 +74,7 @@ export default function Home() {
       {/* Hero */}
       <section
         data-ocid="home.hero_section"
-        className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+        className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden overflow-x-hidden"
       >
         <div className="absolute inset-0">
           <img
@@ -82,6 +82,7 @@ export default function Home() {
             alt=""
             className="w-full h-full object-cover opacity-25"
             aria-hidden="true"
+            loading="lazy"
           />
           <div
             className="absolute inset-0"
@@ -131,6 +132,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            style={{ willChange: "transform" }}
           >
             <Badge
               variant="outline"
@@ -139,28 +141,11 @@ export default function Home() {
               New Collection 2026
             </Badge>
 
-            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-display font-black tracking-tight text-foreground mb-1 leading-none">
-              KICK THE
+            <h1 className="gradient-text text-[80px] sm:text-[120px] md:text-[180px] lg:text-[220px] font-display font-black tracking-tighter leading-none mb-2">
+              KICKS
             </h1>
-            <h1
-              className="text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-display font-black tracking-tight mb-6 leading-none"
-              style={{
-                background:
-                  "linear-gradient(135deg, oklch(0.98 0 0) 0%, oklch(0.62 0.25 22) 45%, oklch(0.72 0.22 264) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              COMPLETE
-            </h1>
-
-            <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto mb-2 leading-relaxed">
-              Premium Sneakers. Elite Style.
-            </p>
-            <p className="text-sm md:text-base text-muted-foreground/70 max-w-xl mx-auto mb-10">
-              Step Into Greatness — curated for those who demand the absolute
-              best.
+            <p className="text-lg md:text-2xl font-light tracking-[0.3em] text-gray-300 uppercase mt-4 mb-10">
+              THE COMPLETE SNEAKER STORE
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -171,7 +156,7 @@ export default function Home() {
               >
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group hover:shadow-glow-purple transition-smooth"
                   style={{ boxShadow: "0 0 30px oklch(0.62 0.25 22 / 0.4)" }}
                 >
                   Shop Now
@@ -263,7 +248,7 @@ export default function Home() {
               <div className="text-xs font-semibold tracking-[0.25em] uppercase text-primary mb-2">
                 Handpicked
               </div>
-              <h2 className="section-heading">Featured Drops</h2>
+              <h2 className="section-heading gradient-text">Featured Drops</h2>
             </div>
             <Link
               to="/shop"
@@ -287,7 +272,7 @@ export default function Home() {
                 data-ocid={`home.featured_item.${i + 1}`}
               >
                 <Link to="/product/$id" params={{ id: product.id }}>
-                  <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-blue">
+                  <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink">
                     <div className="relative aspect-square overflow-hidden bg-muted/30">
                       <img
                         src={product.imagePaths[0]}

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS, getProductById } from "@/data/products";
 import { useCartStore } from "@/stores/cartStore";
+import { useUIStore } from "@/stores/uiStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { useParams } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
@@ -41,6 +42,7 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [orderOpen, setOrderOpen] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
+  const openCart = useUIStore((s) => s.openCart);
   const { toggle, has } = useWishlistStore();
 
   if (!product) {
@@ -80,6 +82,7 @@ export default function ProductDetail() {
       size: selectedSize,
       quantity: 1,
     });
+    openCart();
     toast.success(`${product.name} added to cart!`);
   };
 
@@ -115,6 +118,11 @@ export default function ProductDetail() {
                 src={product.imagePaths[selectedImage] ?? product.imagePaths[0]}
                 alt={product.name}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    "/assets/images/placeholder.svg";
+                }}
               />
             </div>
             {product.imagePaths.length > 1 && (
@@ -135,6 +143,11 @@ export default function ProductDetail() {
                       src={path}
                       alt=""
                       className="w-full h-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "/assets/images/placeholder.svg";
+                      }}
                     />
                   </button>
                 ))}
