@@ -95,7 +95,7 @@ export default function Home() {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse 60% 50% at 50% 10%, oklch(0.72 0.22 264 / 0.15) 0%, transparent 60%)",
+                "radial-gradient(ellipse 60% 50% at 50% 10%, oklch(0.50 0.22 27 / 0.20) 0%, transparent 60%)",
             }}
           />
           <div
@@ -115,6 +115,7 @@ export default function Home() {
               style={{
                 left: `${12 + i * 10}%`,
                 top: `${18 + (i % 4) * 20}%`,
+                willChange: "transform",
               }}
               animate={{ y: [0, -20, 0], opacity: [0.3, 0.8, 0.3] }}
               transition={{
@@ -141,7 +142,7 @@ export default function Home() {
               New Collection 2026
             </Badge>
 
-            <h1 className="gradient-text text-[80px] sm:text-[120px] md:text-[180px] lg:text-[220px] font-display font-black tracking-tighter leading-none mb-2">
+            <h1 className="gradient-text text-6xl sm:text-8xl md:text-[10rem] lg:text-[14rem] font-display font-black tracking-tighter leading-none mb-2">
               KICKS
             </h1>
             <p className="text-lg md:text-2xl font-light tracking-[0.3em] text-gray-300 uppercase mt-4 mb-10">
@@ -156,7 +157,7 @@ export default function Home() {
               >
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group hover:shadow-glow-purple transition-smooth"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group hover:shadow-glow-red transition-smooth"
                   style={{ boxShadow: "0 0 30px oklch(0.62 0.25 22 / 0.4)" }}
                 >
                   Shop Now
@@ -218,7 +219,7 @@ export default function Home() {
                   className="text-3xl md:text-4xl font-display font-black"
                   style={{
                     color:
-                      i % 2 === 0 ? "oklch(0.98 0 0)" : "oklch(0.72 0.22 264)",
+                      i % 2 === 0 ? "oklch(0.98 0 0)" : "oklch(0.50 0.22 27)",
                   }}
                 >
                   {stat.value}
@@ -272,7 +273,7 @@ export default function Home() {
                 data-ocid={`home.featured_item.${i + 1}`}
               >
                 <Link to="/product/$id" params={{ id: product.id }}>
-                  <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink">
+                  <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-red">
                     <div className="relative aspect-square overflow-hidden bg-muted/30">
                       <img
                         src={product.imagePaths[0]}

@@ -20,6 +20,12 @@ export const ShoppingItem = IDL.Record({
   'priceInCents' : IDL.Nat,
   'productDescription' : IDL.Text,
 });
+export const LogEntry = IDL.Record({
+  'message' : IDL.Text,
+  'timestamp' : IDL.Int,
+  'success' : IDL.Bool,
+  'channel' : IDL.Text,
+});
 export const OrderId = IDL.Nat;
 export const OrderStatus = IDL.Variant({
   'shipped' : IDL.Null,
@@ -136,6 +142,7 @@ export const idlService = IDL.Service({
     ),
   'deleteProduct' : IDL.Func([IDL.Text], [], []),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getNotificationLog' : IDL.Func([], [IDL.Vec(LogEntry)], ['query']),
   'getOrder' : IDL.Func([OrderId], [IDL.Opt(Order)], ['query']),
   'getProduct' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
   'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
@@ -176,6 +183,8 @@ export const idlService = IDL.Service({
       [],
     ),
   'placeOrder' : IDL.Func([IDL.Vec(OrderItem), IDL.Nat], [Order], []),
+  'setCallMeBotApiKey' : IDL.Func([IDL.Text], [], []),
+  'setResendApiKey' : IDL.Func([IDL.Text], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
   'submitOrderRequest' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Text, IDL.Text],
@@ -205,6 +214,12 @@ export const idlFactory = ({ IDL }) => {
     'quantity' : IDL.Nat,
     'priceInCents' : IDL.Nat,
     'productDescription' : IDL.Text,
+  });
+  const LogEntry = IDL.Record({
+    'message' : IDL.Text,
+    'timestamp' : IDL.Int,
+    'success' : IDL.Bool,
+    'channel' : IDL.Text,
   });
   const OrderId = IDL.Nat;
   const OrderStatus = IDL.Variant({
@@ -319,6 +334,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'deleteProduct' : IDL.Func([IDL.Text], [], []),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getNotificationLog' : IDL.Func([], [IDL.Vec(LogEntry)], ['query']),
     'getOrder' : IDL.Func([OrderId], [IDL.Opt(Order)], ['query']),
     'getProduct' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
     'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
@@ -359,6 +375,8 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'placeOrder' : IDL.Func([IDL.Vec(OrderItem), IDL.Nat], [Order], []),
+    'setCallMeBotApiKey' : IDL.Func([IDL.Text], [], []),
+    'setResendApiKey' : IDL.Func([IDL.Text], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
     'submitOrderRequest' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Text, IDL.Text],

@@ -1,7 +1,7 @@
-import { j as jsxRuntimeExports, m as motion, L as Link, u as ue } from "./index-BepgGYDm.js";
-import { c as createLucideIcon, L as Layout, B as Button } from "./button-rcDW-ULO.js";
-import { g as getFeaturedProducts, B as Badge, P as PRODUCTS } from "./products-U2Q5Zptf.js";
-import { A as ArrowRight } from "./arrow-right-Dm1O90fu.js";
+import { j as jsxRuntimeExports, m as motion, L as Link, u as ue } from "./index-EDhnjgOJ.js";
+import { c as createLucideIcon, L as Layout, B as Button } from "./button-B4gG1HGM.js";
+import { g as getFeaturedProducts, B as Badge, P as PRODUCTS } from "./products-CVM2En7h.js";
+import { A as ArrowRight } from "./arrow-right-DIANPPUE.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -137,7 +137,7 @@ function Home() {
               {
                 className: "absolute inset-0",
                 style: {
-                  background: "radial-gradient(ellipse 60% 50% at 50% 10%, oklch(0.72 0.22 264 / 0.15) 0%, transparent 60%)"
+                  background: "radial-gradient(ellipse 60% 50% at 50% 10%, oklch(0.50 0.22 27 / 0.20) 0%, transparent 60%)"
                 }
               }
             ),
@@ -158,7 +158,8 @@ function Home() {
                 className: "absolute w-1 h-1 rounded-full bg-accent/40",
                 style: {
                   left: `${12 + i * 10}%`,
-                  top: `${18 + i % 4 * 20}%`
+                  top: `${18 + i % 4 * 20}%`,
+                  willChange: "transform"
                 },
                 animate: { y: [0, -20, 0], opacity: [0.3, 0.8, 0.3] },
                 transition: {
@@ -187,7 +188,7 @@ function Home() {
                     children: "New Collection 2026"
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "gradient-text text-[80px] sm:text-[120px] md:text-[180px] lg:text-[220px] font-display font-black tracking-tighter leading-none mb-2", children: "KICKS" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "gradient-text text-6xl sm:text-8xl md:text-[10rem] lg:text-[14rem] font-display font-black tracking-tighter leading-none mb-2", children: "KICKS" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-lg md:text-2xl font-light tracking-[0.3em] text-gray-300 uppercase mt-4 mb-10", children: "THE COMPLETE SNEAKER STORE" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row items-center justify-center gap-4", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -200,7 +201,7 @@ function Home() {
                         Button,
                         {
                           size: "lg",
-                          className: "bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group hover:shadow-glow-purple transition-smooth",
+                          className: "bg-primary hover:bg-primary/90 text-primary-foreground px-10 font-bold text-base group hover:shadow-glow-red transition-smooth",
                           style: { boxShadow: "0 0 30px oklch(0.62 0.25 22 / 0.4)" },
                           children: [
                             "Shop Now",
@@ -273,7 +274,7 @@ function Home() {
                 {
                   className: "text-3xl md:text-4xl font-display font-black",
                   style: {
-                    color: i % 2 === 0 ? "oklch(0.98 0 0)" : "oklch(0.72 0.22 264)"
+                    color: i % 2 === 0 ? "oklch(0.98 0 0)" : "oklch(0.50 0.22 27)"
                   },
                   children: stat.value
                 }
@@ -327,7 +328,7 @@ function Home() {
               viewport: { once: true },
               transition: { duration: 0.5, delay: i * 0.1 },
               "data-ocid": `home.featured_item.${i + 1}`,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/product/$id", params: { id: product.id }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink", children: [
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/product/$id", params: { id: product.id }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-red", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative aspect-square overflow-hidden bg-muted/30", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "img",

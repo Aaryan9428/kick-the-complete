@@ -101,7 +101,7 @@ export function Header() {
             >
               <ShoppingCart className="w-4 h-4" />
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
                   {totalItems > 9 ? "9+" : totalItems}
                 </span>
               )}
@@ -113,7 +113,7 @@ export function Header() {
               className={`hidden md:flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-medium transition-smooth ${
                 isAuthenticated
                   ? "bg-muted/40 text-foreground hover:bg-muted"
-                  : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-glow-accent"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-glow-red"
               }`}
             >
               <User className="w-3.5 h-3.5" />
@@ -160,13 +160,15 @@ export function Header() {
                     q: undefined,
                   }}
                   className="flex items-center h-11 px-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-smooth"
+                  onClick={() => setMobileOpen(false)}
                 >
                   {link.label}
                 </Link>
               ))}
               <Link
                 to="/login"
-                className="flex items-center gap-2 h-11 px-3 rounded-lg text-sm font-medium text-foreground hover:bg-muted/40 transition-smooth mt-1 border-t border-border/20 pt-3"
+                className="flex items-center gap-2 h-11 px-3 rounded-lg text-sm font-medium text-foreground hover:bg-muted/40 transition-smooth mt-2 border-t border-border/20 pt-3"
+                onClick={() => setMobileOpen(false)}
               >
                 <User className="w-4 h-4" />
                 {isAuthenticated ? "Account" : "Login / Register"}

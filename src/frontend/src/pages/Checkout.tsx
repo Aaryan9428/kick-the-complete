@@ -1,6 +1,7 @@
 import { createActor } from "@/backend";
 import type { CartItemInput, PaymentMethod } from "@/backend";
 import { Layout } from "@/components/Layout";
+import { UpiPayment } from "@/components/UpiPayment";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -33,7 +34,7 @@ interface FormState {
 }
 
 const inputClass =
-  "bg-gray-900 border border-gray-700 focus:border-pink-500 focus:ring-1 focus:ring-pink-500/30 rounded-lg px-4 py-3 text-sm text-white placeholder:text-gray-500 transition-colors outline-none w-full";
+  "bg-gray-900 border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500/30 rounded-lg px-4 py-3 text-sm text-white placeholder:text-gray-500 transition-colors outline-none w-full";
 
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCartStore();
@@ -96,7 +97,7 @@ export default function Checkout() {
       return;
     }
     if (paymentMethod === "phonepe" && !phonepePaid) {
-      toast.error("Please confirm you have completed the PhonePe payment");
+      toast.error("Please confirm you have completed the UPI payment");
       return;
     }
     if (!actor) {
@@ -190,7 +191,7 @@ export default function Checkout() {
             transition={{ duration: 0.5 }}
             className="mb-10"
           >
-            <div className="text-xs font-semibold tracking-[0.25em] uppercase bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
+            <div className="text-xs font-semibold tracking-[0.25em] uppercase bg-gradient-to-r from-red-400 to-rose-300 bg-clip-text text-transparent mb-2">
               Secure Checkout
             </div>
             <h1 className="text-3xl md:text-5xl font-display font-black text-white">
@@ -210,7 +211,7 @@ export default function Checkout() {
                 data-ocid="checkout.shipping_form"
               >
                 <h2 className="font-display font-bold text-white flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-pink-400" />
+                  <Lock className="w-4 h-4 text-red-400" />
                   Shipping Information
                 </h2>
 
@@ -229,7 +230,7 @@ export default function Checkout() {
                     />
                     {errors.name && (
                       <p
-                        className="text-xs text-pink-400"
+                        className="text-xs text-red-400"
                         data-ocid="checkout.shipping_name.field_error"
                       >
                         {errors.name}
@@ -251,7 +252,7 @@ export default function Checkout() {
                     />
                     {errors.phone && (
                       <p
-                        className="text-xs text-pink-400"
+                        className="text-xs text-red-400"
                         data-ocid="checkout.shipping_phone.field_error"
                       >
                         {errors.phone}
@@ -291,7 +292,7 @@ export default function Checkout() {
                   />
                   {errors.address && (
                     <p
-                      className="text-xs text-pink-400"
+                      className="text-xs text-red-400"
                       data-ocid="checkout.shipping_address.field_error"
                     >
                       {errors.address}
@@ -314,7 +315,7 @@ export default function Checkout() {
                     />
                     {errors.city && (
                       <p
-                        className="text-xs text-pink-400"
+                        className="text-xs text-red-400"
                         data-ocid="checkout.shipping_city.field_error"
                       >
                         {errors.city}
@@ -336,7 +337,7 @@ export default function Checkout() {
                     />
                     {errors.state && (
                       <p
-                        className="text-xs text-pink-400"
+                        className="text-xs text-red-400"
                         data-ocid="checkout.shipping_state.field_error"
                       >
                         {errors.state}
@@ -364,7 +365,7 @@ export default function Checkout() {
                     />
                     {errors.pincode && (
                       <p
-                        className="text-xs text-pink-400"
+                        className="text-xs text-red-400"
                         data-ocid="checkout.shipping_pincode.field_error"
                       >
                         {errors.pincode}
@@ -410,7 +411,7 @@ export default function Checkout() {
                     onClick={() => setPaymentMethod("cod")}
                     className={`w-full rounded-xl border-2 p-4 text-left transition-all duration-200 ${
                       paymentMethod === "cod"
-                        ? "border-pink-500 bg-pink-500/10 shadow-[0_0_20px_rgba(236,72,153,0.2)]"
+                        ? "border-red-500 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.2)]"
                         : "border-gray-700 bg-gray-900/50 hover:border-gray-500"
                     }`}
                   >
@@ -418,14 +419,14 @@ export default function Checkout() {
                       <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center ${
                           paymentMethod === "cod"
-                            ? "bg-pink-500/20"
+                            ? "bg-red-500/20"
                             : "bg-gray-800"
                         }`}
                       >
                         <Banknote
                           className={`w-5 h-5 ${
                             paymentMethod === "cod"
-                              ? "text-pink-400"
+                              ? "text-red-400"
                               : "text-gray-400"
                           }`}
                         />
@@ -446,7 +447,7 @@ export default function Checkout() {
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
                           paymentMethod === "cod"
-                            ? "border-pink-500 bg-pink-500"
+                            ? "border-red-500 bg-red-500"
                             : "border-gray-600"
                         }`}
                       >
@@ -457,14 +458,14 @@ export default function Checkout() {
                     </div>
                   </button>
 
-                  {/* PhonePe */}
+                  {/* UPI Payment */}
                   <button
                     type="button"
                     data-ocid="checkout.payment_phonepe_tab"
                     onClick={() => setPaymentMethod("phonepe")}
                     className={`w-full rounded-xl border-2 p-4 text-left transition-all duration-200 ${
                       paymentMethod === "phonepe"
-                        ? "border-purple-500 bg-purple-500/10 shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                        ? "border-red-500 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.2)]"
                         : "border-gray-700 bg-gray-900/50 hover:border-gray-500"
                     }`}
                   >
@@ -472,14 +473,14 @@ export default function Checkout() {
                       <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center ${
                           paymentMethod === "phonepe"
-                            ? "bg-purple-500/20"
+                            ? "bg-red-500/20"
                             : "bg-gray-800"
                         }`}
                       >
                         <Smartphone
                           className={`w-5 h-5 ${
                             paymentMethod === "phonepe"
-                              ? "text-purple-400"
+                              ? "text-red-400"
                               : "text-gray-400"
                           }`}
                         />
@@ -487,20 +488,20 @@ export default function Checkout() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-white text-sm">
-                            PhonePe / UPI
+                            UPI Payment
                           </span>
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
                             Instant
                           </span>
                         </div>
                         <p className="text-xs text-gray-400 mt-0.5">
-                          Pay instantly via PhonePe UPI
+                          Pay instantly via UPI
                         </p>
                       </div>
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
                           paymentMethod === "phonepe"
-                            ? "border-purple-500 bg-purple-500"
+                            ? "border-red-500 bg-red-500"
                             : "border-gray-600"
                         }`}
                       >
@@ -512,7 +513,7 @@ export default function Checkout() {
                   </button>
                 </div>
 
-                {/* PhonePe Instructions Panel */}
+                {/* UPI Payment Panel */}
                 <AnimatePresence>
                   {paymentMethod === "phonepe" && (
                     <motion.div
@@ -522,75 +523,11 @@ export default function Checkout() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="rounded-xl border border-purple-500/30 bg-purple-500/5 p-5 space-y-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl">💜</span>
-                          <h3 className="font-semibold text-white text-sm">
-                            PhonePe Payment Instructions
-                          </h3>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="flex items-start gap-3">
-                            <span className="w-6 h-6 rounded-full bg-purple-500/30 text-purple-300 text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
-                              1
-                            </span>
-                            <div>
-                              <p className="text-sm text-gray-300">
-                                Send payment to UPI ID:
-                              </p>
-                              <code className="mt-1.5 inline-block bg-gray-900 border border-purple-500/40 rounded-lg px-3 py-1.5 text-purple-300 font-mono text-sm font-bold tracking-wider">
-                                9834757639@ybl
-                              </code>
-                            </div>
-                          </div>
-
-                          <div className="flex items-start gap-3">
-                            <span className="w-6 h-6 rounded-full bg-purple-500/30 text-purple-300 text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
-                              2
-                            </span>
-                            <div>
-                              <p className="text-sm text-gray-300">
-                                Amount to pay:
-                              </p>
-                              <p className="text-2xl font-display font-black bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mt-1">
-                                {fmt(total)}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-start gap-3">
-                            <span className="w-6 h-6 rounded-full bg-purple-500/30 text-purple-300 text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
-                              3
-                            </span>
-                            <p className="text-sm text-gray-300">
-                              Take a screenshot of the payment confirmation for
-                              your reference.
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="border-t border-purple-500/20 pt-4">
-                          <label
-                            className="flex items-start gap-3 cursor-pointer group"
-                            htmlFor="phonepe-confirmed"
-                          >
-                            <Checkbox
-                              id="phonepe-confirmed"
-                              data-ocid="checkout.phonepe_paid_checkbox"
-                              checked={phonepePaid}
-                              onCheckedChange={(v) => setPhonepePaid(!!v)}
-                              className="mt-0.5 border-purple-500/50 data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500"
-                            />
-                            <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                              I have completed the PhonePe payment of{" "}
-                              <span className="font-bold text-purple-400">
-                                {fmt(total)}
-                              </span>
-                            </span>
-                          </label>
-                        </div>
-                      </div>
+                      <UpiPayment
+                        total={total}
+                        orderId="PENDING"
+                        onPaymentConfirmed={() => setPhonepePaid(true)}
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -659,7 +596,7 @@ export default function Checkout() {
                   <div className="h-px bg-gray-700 my-1" />
                   <div className="flex justify-between font-bold text-base">
                     <span className="text-white">Total</span>
-                    <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-red-400 to-rose-300 bg-clip-text text-transparent">
                       {fmt(total)}
                     </span>
                   </div>
@@ -676,7 +613,7 @@ export default function Checkout() {
                     isSubmitting ||
                     (paymentMethod === "phonepe" && !phonepePaid)
                   }
-                  className="w-full relative overflow-hidden rounded-xl py-4 px-6 font-display font-bold text-white text-base tracking-wide bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_0_30px_rgba(236,72,153,0.4)] hover:shadow-[0_0_40px_rgba(236,72,153,0.6)] active:scale-[0.99]"
+                  className="w-full relative overflow-hidden rounded-xl py-4 px-6 font-display font-bold text-white text-base tracking-wide bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-500 hover:to-rose-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_0_30px_rgba(239,68,68,0.4)] hover:shadow-[0_0_40px_rgba(239,68,68,0.6)] active:scale-[0.99]"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
@@ -691,7 +628,7 @@ export default function Checkout() {
                   ) : (
                     <span className="flex items-center justify-center gap-2">
                       <CheckCircle2 className="w-5 h-5" />
-                      Confirm PhonePe Payment
+                      Confirm UPI Payment
                     </span>
                   )}
                 </button>

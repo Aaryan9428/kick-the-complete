@@ -1,9 +1,11 @@
-// Version: 3.0.0
+// Version: 1.0.0
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
 type Internal__8484328<K, V> =
   {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
 type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type LogEntry__39472447 =
+  {channel : Text; message : Text; success : Bool; timestamp : Int};
 type Map__158565046<K, V> = Map__297112838<K, V>;
 type Map__297112838<K, V> =
   {var root : Node__46230540<K, V>; var size : Nat__490723111};
@@ -12,27 +14,6 @@ type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
-type OldOrderItem__518217749 =
-  {
-    priceInCents : Nat;
-    productId : Text;
-    productName : Text;
-    quantity : Nat;
-    size : Text
-  };
-type OldOrderStatus__13175761 =
-  {#cancelled; #delivered; #paid; #pending; #shipped};
-type OldOrder__235915581 =
-  {
-    createdAt : Int;
-    id : Nat;
-    items : [OldOrderItem__518217749];
-    status : OldOrderStatus__13175761;
-    stripeSessionId : ?Text;
-    totalInCents : Nat;
-    updatedAt : Int;
-    userId : Principal
-  };
 type OrderId__197865225 = Nat;
 type OrderItem__241319351 =
   {
@@ -96,31 +77,18 @@ type StripeConfiguration__87721349 =
 type Timestamp__301639476 = Int;
 type UserId__158757552 = Principal;
 type UserRole__1073662873 = {#admin; #guest; #user};
-actor ({
+actor {
   stable accessControlState :
     {
       var adminAssigned : Bool;
       userRoles : Map__605269027<Principal, UserRole__1073662873>
     };
-  stable orderRequestState : {var nextId : Nat};
-  stable orderRequestStore :
+  stable notifConfig : {var callMeBotApiKey : Text; var resendApiKey : Text};
+  stable notifLog :
     {
-      var root : Node__46230540<OrderId__197865225, OrderRequest__324779619>;
-      var size : Nat__490723111
-    };
-  in orderState : {var nextOrderId : Nat};
-  in var orderStore : Map__605269027<Nat, OldOrder__235915581>;
-  stable productCatalog :
-    {
-      var root : Node__46230540<Text, Product__750902660>;
-      var size : Nat__490723111
-    };
-  stable var stripeConfiguration : ?StripeConfiguration__87721349
-}, {
-  stable accessControlState :
-    {
-      var adminAssigned : Bool;
-      userRoles : Map__605269027<Principal, UserRole__1073662873>
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?LogEntry__39472447]];
+      var elementIndex : Nat__490723111
     };
   stable orderRequestState : {var nextId : Nat};
   stable orderRequestStore :
@@ -140,4 +108,4 @@ actor ({
       var size : Nat__490723111
     };
   stable var stripeConfiguration : ?StripeConfiguration__87721349
-});
+};

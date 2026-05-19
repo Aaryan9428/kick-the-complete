@@ -57,12 +57,12 @@ export function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
               <div className="flex items-center gap-2.5">
-                <ShoppingBag className="w-5 h-5 text-pink-400" />
+                <ShoppingBag className="w-5 h-5 text-red-500" />
                 <h2 className="text-base font-display font-bold text-foreground tracking-wide">
                   Shopping Cart
                 </h2>
                 {items.length > 0 && (
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gradient-to-r from-red-600 to-red-800 text-white">
                     {items.reduce((s, i) => s + i.quantity, 0)}
                   </span>
                 )}
@@ -102,7 +102,7 @@ export function CartDrawer() {
                   <button
                     type="button"
                     onClick={closeCart}
-                    className="mt-2 text-sm font-medium text-pink-400 hover:text-pink-300 transition-smooth"
+                    className="mt-2 text-sm font-medium text-red-500 hover:text-red-400 transition-smooth"
                   >
                     Continue Shopping →
                   </button>
@@ -143,7 +143,7 @@ export function CartDrawer() {
                         className="text-sm font-bold mt-1.5"
                         style={{
                           background:
-                            "linear-gradient(90deg, #ec4899, #a855f7)",
+                            "linear-gradient(90deg, #dc2626, #991b1b)",
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
                         }}
@@ -225,7 +225,7 @@ export function CartDrawer() {
                     <span className="text-foreground">Total</span>
                     <span
                       style={{
-                        background: "linear-gradient(90deg, #ec4899, #a855f7)",
+                        background: "linear-gradient(90deg, #dc2626, #991b1b)",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                       }}
@@ -241,8 +241,8 @@ export function CartDrawer() {
                   data-ocid="cart_drawer.checkout_button"
                   className="block w-full py-3 rounded-xl text-center text-sm font-bold text-white transition-smooth hover:opacity-90 active:scale-[0.98]"
                   style={{
-                    background: "linear-gradient(90deg, #ec4899, #a855f7)",
-                    boxShadow: "0 0 24px rgba(236,72,153,0.35)",
+                    background: "linear-gradient(90deg, #dc2626, #991b1b)",
+                    boxShadow: "0 0 24px rgba(220,38,38,0.40)",
                   }}
                 >
                   Proceed to Checkout

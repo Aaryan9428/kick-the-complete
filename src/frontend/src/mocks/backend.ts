@@ -146,4 +146,7 @@ export const mockBackend: backendInterface = {
     orderNotes: string;
   }) => ({ __kind__: "ok" as const, ok: { orderId: BigInt(1), displayOrderId: "KICKS-12345-1" } }),
   _initializeAccessControl: async () => undefined,
+  getNotificationLog: async () => [],
+  setCallMeBotApiKey: async (_key: string) => undefined,
+  setResendApiKey: async (_key: string) => undefined,
 };

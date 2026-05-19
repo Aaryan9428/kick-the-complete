@@ -13,9 +13,10 @@ import Runtime "mo:core/Runtime";
 import OrderRequestTypes "types/order-requests";
 import OrderNotifLib "lib/order-notifications";
 import OrderNotificationsMixin "mixins/order-notifications";
-import Migration "migration";
+import List "mo:core/List";
 
-(with migration = Migration.run)
+
+
 persistent actor {
   // Authorization
   let accessControlState = AccessControl.initState();
@@ -231,6 +232,10 @@ persistent actor {
   // Order requests state (anonymous order notification system)
   let orderRequestStore = Map.empty<Common.OrderId, OrderRequestTypes.OrderRequest>();
   let orderRequestState : OrderNotifLib.CounterState = { var nextId : Nat = 0 };
+  // Notification config (mutable keys set via Candid UI)
+  let notifConfig : OrderNotifLib.NotifConfig = { var resendApiKey = ""; var callMeBotApiKey = "" };
+  // Notification delivery log (last 100 entries)
+  let notifLog = List.empty<OrderNotifLib.LogEntry>();
 
   // Stripe configuration state
   var stripeConfiguration : ?Stripe.StripeConfiguration = null;
@@ -269,8 +274,8 @@ persistent actor {
   };
 
   // Domain mixins that require transform (must come after transform definition)
-  include OrdersMixin(accessControlState, orderStore, orderState, transform);
+  include OrdersMixin(accessControlState, orderStore, orderState, notifConfig, notifLog, transform);
 
   // Order notification mixin (after transform so the shared query func is in scope)
-  include OrderNotificationsMixin(orderRequestStore, orderRequestState, transform);
+  include OrderNotificationsMixin(orderRequestStore, orderRequestState, notifConfig, notifLog, transform);
 };

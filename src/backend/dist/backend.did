@@ -121,6 +121,13 @@ type Order =
    updatedAt: Timestamp;
    userId: UserId;
  };
+type LogEntry = 
+ record {
+   channel: text;
+   message: text;
+   success: bool;
+   timestamp: int;
+ };
 type CartItemInput = 
  record {
    priceInCents: nat;
@@ -137,6 +144,7 @@ service : {
    cancelUrl: text) -> (text);
   deleteProduct: (id: text) -> ();
   getCallerUserRole: () -> (UserRole) query;
+  getNotificationLog: () -> (vec LogEntry) query;
   getOrder: (id: OrderId) -> (opt Order) query;
   getProduct: (id: text) -> (opt Product) query;
   getStripeSessionStatus: (sessionId: text) -> (StripeSessionStatus);
@@ -167,6 +175,8 @@ service : {
           };
     });
   placeOrder: (items: vec OrderItem, totalInCents: nat) -> (Order);
+  setCallMeBotApiKey: (key: text) -> ();
+  setResendApiKey: (key: text) -> ();
   setStripeConfiguration: (config: StripeConfiguration) -> ();
   submitOrderRequest: (customerName: text, phone: text, productName: 
    text, shoeSize: text, quantity: nat, address: text, note: text) ->

@@ -1,9 +1,9 @@
-import { j as jsxRuntimeExports, a as useSearch, r as reactExports, m as motion, L as Link, u as ue } from "./index-BepgGYDm.js";
-import { c as createLucideIcon, a as cn, u as useCartStore, b as useUIStore, L as Layout, S as Search, B as Button, H as Heart } from "./button-rcDW-ULO.js";
-import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-9QYfpook.js";
-import { P as PRODUCTS, C as CATEGORIES, a as BRANDS, B as Badge } from "./products-U2Q5Zptf.js";
-import "./index-DBimtIV6.js";
-import "./loader-circle-Cpv7GnKP.js";
+import { j as jsxRuntimeExports, a as useSearch, r as reactExports, m as motion, L as Link, u as ue } from "./index-EDhnjgOJ.js";
+import { c as createLucideIcon, a as cn, u as useCartStore, b as useUIStore, L as Layout, S as Search, B as Button, H as Heart } from "./button-B4gG1HGM.js";
+import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-eSQ1kDu6.js";
+import { P as PRODUCTS, C as CATEGORIES, a as BRANDS, B as Badge } from "./products-CVM2En7h.js";
+import "./backend-C4U0oltt.js";
+import "./loader-circle-Dch6iWqb.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -193,7 +193,7 @@ function Shop() {
           animate: { opacity: 1, y: 0 },
           transition: { duration: 0.4, delay: Math.min(i * 0.05, 0.4) },
           "data-ocid": `shop.product_item.${i + 1}`,
-          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink relative", children: [
+          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-red relative", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "button",
               {

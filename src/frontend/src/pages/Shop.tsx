@@ -190,7 +190,7 @@ export default function Shop() {
                 transition={{ duration: 0.4, delay: Math.min(i * 0.05, 0.4) }}
                 data-ocid={`shop.product_item.${i + 1}`}
               >
-                <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-pink relative">
+                <div className="group glass-card overflow-hidden hover:border-border/40 transition-smooth hover:shadow-glow-red relative">
                   {/* Wishlist */}
                   <button
                     type="button"

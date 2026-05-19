@@ -4,16 +4,18 @@ import Principal "mo:core/Principal";
 import OrderLib "../lib/orders";
 import Common "../types/common";
 import OutCall "mo:caffeineai-http-outcalls/outcall";
-import OrderNotifLib "../lib/order-notifications";
 import Time "mo:core/Time";
 import Int "mo:core/Int";
 import Nat "mo:core/Nat";
 import OrderTypes "../types/orders";
+import OrderNotifLib "../lib/order-notifications";
 
 mixin (
   accessControlState : AccessControl.AccessControlState,
   orders : OrderLib.OrderMap,
   orderState : OrderLib.CounterState,
+  notifConfig : OrderNotifLib.NotifConfig,
+  notifLog : OrderNotifLib.NotificationLog,
   transform : OutCall.Transform,
 ) {
   public shared ({ caller }) func placeOrder(items : [OrderTypes.OrderItem], totalInCents : Nat) : async OrderTypes.Order {
@@ -95,12 +97,22 @@ mixin (
           case (#phonepe) "PhonePe UPI";
           case (#stripe) "Card Payment";
         };
+        let orderDate = (Int.abs(Time.now()) / 1_000_000_000).toText();
         ignore async {
-          await OrderNotifLib.sendFullOrderEmail(
+          ignore await OrderNotifLib.sendResendEmail(
+            notifConfig.resendApiKey,
             displayId, payload.customerName, payload.customerPhone,
             payload.shippingAddress, payload.pincode, payload.orderNotes,
             payload.cartItems, payload.totalInCents, paymentText,
-            (Time.now() / 1_000_000_000).toText(), transform
+            orderDate, notifLog, transform,
+          );
+        };
+        ignore async {
+          ignore await OrderNotifLib.sendWhatsAppNotification(
+            notifConfig.callMeBotApiKey,
+            displayId, payload.customerName, payload.customerPhone,
+            payload.cartItems, payload.totalInCents, paymentText,
+            payload.shippingAddress, notifLog, transform,
           );
         };
         #ok({ orderId = orderId; displayOrderId = displayId })

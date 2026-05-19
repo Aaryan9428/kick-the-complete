@@ -17,6 +17,12 @@ export interface CartItemInput {
   'quantity' : bigint,
   'priceInCents' : bigint,
 }
+export interface LogEntry {
+  'message' : string,
+  'timestamp' : bigint,
+  'success' : boolean,
+  'channel' : string,
+}
 export interface Order {
   'id' : OrderId,
   'customerName' : [] | [string],
@@ -124,6 +130,7 @@ export interface _SERVICE {
   >,
   'deleteProduct' : ActorMethod<[string], undefined>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getNotificationLog' : ActorMethod<[], Array<LogEntry>>,
   'getOrder' : ActorMethod<[OrderId], [] | [Order]>,
   'getProduct' : ActorMethod<[string], [] | [Product]>,
   'getStripeSessionStatus' : ActorMethod<[string], StripeSessionStatus>,
@@ -152,6 +159,8 @@ export interface _SERVICE {
       { 'err' : string }
   >,
   'placeOrder' : ActorMethod<[Array<OrderItem>, bigint], Order>,
+  'setCallMeBotApiKey' : ActorMethod<[string], undefined>,
+  'setResendApiKey' : ActorMethod<[string], undefined>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
   'submitOrderRequest' : ActorMethod<
     [string, string, string, string, bigint, string, string],

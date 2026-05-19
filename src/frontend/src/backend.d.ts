@@ -68,6 +68,12 @@ export interface ShoppingItem {
     priceInCents: bigint;
     productDescription: string;
 }
+export interface LogEntry {
+    message: string;
+    timestamp: bigint;
+    success: boolean;
+    channel: string;
+}
 export interface CartItemInput {
     size: string;
     productId: string;
@@ -134,6 +140,7 @@ export interface backendInterface {
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     deleteProduct(id: string): Promise<void>;
     getCallerUserRole(): Promise<UserRole>;
+    getNotificationLog(): Promise<Array<LogEntry>>;
     getOrder(id: OrderId): Promise<Order | null>;
     getProduct(id: string): Promise<Product | null>;
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
@@ -165,6 +172,8 @@ export interface backendInterface {
         err: string;
     }>;
     placeOrder(items: Array<OrderItem>, totalInCents: bigint): Promise<Order>;
+    setCallMeBotApiKey(key: string): Promise<void>;
+    setResendApiKey(key: string): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     submitOrderRequest(customerName: string, phone: string, productName: string, shoeSize: string, quantity: bigint, address: string, note: string): Promise<{
         __kind__: "ok";

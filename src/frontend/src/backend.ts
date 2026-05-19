@@ -150,6 +150,12 @@ export interface ShoppingItem {
     priceInCents: bigint;
     productDescription: string;
 }
+export interface LogEntry {
+    message: string;
+    timestamp: bigint;
+    success: boolean;
+    channel: string;
+}
 export interface CartItemInput {
     size: string;
     productId: string;
@@ -217,6 +223,7 @@ export interface backendInterface {
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     deleteProduct(id: string): Promise<void>;
     getCallerUserRole(): Promise<UserRole>;
+    getNotificationLog(): Promise<Array<LogEntry>>;
     getOrder(id: OrderId): Promise<Order | null>;
     getProduct(id: string): Promise<Product | null>;
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
@@ -248,6 +255,8 @@ export interface backendInterface {
         err: string;
     }>;
     placeOrder(items: Array<OrderItem>, totalInCents: bigint): Promise<Order>;
+    setCallMeBotApiKey(key: string): Promise<void>;
+    setResendApiKey(key: string): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     submitOrderRequest(customerName: string, phone: string, productName: string, shoeSize: string, quantity: bigint, address: string, note: string): Promise<{
         __kind__: "ok";
@@ -345,6 +354,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getCallerUserRole();
             return from_candid_UserRole_n3(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getNotificationLog(): Promise<Array<LogEntry>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getNotificationLog();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getNotificationLog();
+            return result;
         }
     }
     async getOrder(arg0: OrderId): Promise<Order | null> {
@@ -545,6 +568,34 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.placeOrder(to_candid_vec_n29(this._uploadFile, this._downloadFile, arg0), arg1);
             return from_candid_Order_n6(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async setCallMeBotApiKey(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.setCallMeBotApiKey(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.setCallMeBotApiKey(arg0);
+            return result;
+        }
+    }
+    async setResendApiKey(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.setResendApiKey(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.setResendApiKey(arg0);
+            return result;
         }
     }
     async setStripeConfiguration(arg0: StripeConfiguration): Promise<void> {

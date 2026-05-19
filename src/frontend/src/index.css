@@ -16,7 +16,7 @@
     --popover: 0.18 0 0;
     --popover-foreground: 0.98 0 0;
 
-    --primary: 0.62 0.25 22;
+    --primary: 0.5 0.22 27;
     --primary-foreground: 0.98 0 0;
 
     --secondary: 0.72 0.22 264;
@@ -52,14 +52,14 @@
     /* Luxury gradient properties */
     --gradient-primary: linear-gradient(
       135deg,
-      #f472b6 0%,
-      #a855f7 50%,
-      #7c3aed 100%
+      #dc2626 0%,
+      #991b1b 50%,
+      #7f1d1d 100%
     );
     --gradient-subtle: linear-gradient(
       135deg,
-      rgba(244, 114, 182, 0.1) 0%,
-      rgba(168, 85, 247, 0.1) 100%
+      rgba(220, 38, 38, 0.1) 0%,
+      rgba(127, 29, 29, 0.1) 100%
     );
   }
 
@@ -71,7 +71,7 @@
     --popover: 0.18 0 0;
     --popover-foreground: 0.98 0 0;
 
-    --primary: 0.62 0.25 22;
+    --primary: 0.5 0.22 27;
     --primary-foreground: 0.98 0 0;
 
     --secondary: 0.72 0.22 264;
@@ -128,11 +128,11 @@
   background: #050508;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #f472b6, #7c3aed);
+  background: linear-gradient(180deg, #dc2626, #7f1d1d);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ec4899, #6d28d9);
+  background: linear-gradient(180deg, #b91c1c, #991b1b);
 }
 
 @layer utilities {
@@ -164,6 +164,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 0 40px rgba(220, 38, 38, 0.5);
   }
 
   /* Section rhythm */

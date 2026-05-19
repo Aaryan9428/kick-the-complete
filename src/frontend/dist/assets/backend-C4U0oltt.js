@@ -7,8 +7,7 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _client, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _currentThenable, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _QueryObserver_instances, executeFetch_fn, updateStaleTimeout_fn, computeRefetchInterval_fn, updateRefetchInterval_fn, updateTimers_fn, clearStaleTimeout_fn, clearRefetchInterval_fn, updateQuery_fn, notify_fn, _a;
-import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, f as utf8ToBytes, E as ExternalError, M as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, g as RequestStatusResponseStatus, U as UnknownError, h as RequestStatusDoneNoReplyErrorCode, i as RejectError, k as CertifiedRejectErrorCode, n as UNREACHABLE_ERROR, I as InputError, o as InvalidReadStateRequestErrorCode, p as ReadRequestType, q as Principal, s as IDL, t as MissingCanisterIdErrorCode, H as HttpAgent, v as encode, Q as QueryResponseStatus, w as UncertifiedRejectErrorCode, x as isV3ResponseBody, y as isV2ResponseBody, z as UncertifiedRejectUpdateErrorCode, A as UnexpectedErrorCode, B as decode, S as Subscribable, D as pendingThenable, F as resolveEnabled, G as shallowEqualObjects, J as resolveStaleTime, K as noop, N as environmentManager, O as isValidTimeout, V as timeUntilStale, W as timeoutManager, X as focusManager, Y as fetchState, Z as replaceData, _ as notifyManager, r as reactExports, $ as shouldThrowError, a0 as useQueryClient, a1 as useInternetIdentity, a2 as createActorWithConfig, a3 as Variant, a4 as Record, a5 as Opt, a6 as Vec, a7 as Service, a8 as Func, a9 as Text, aa as Nat, ab as Null, ac as Int, ad as Principal$1, ae as Bool, af as Nat8, j as jsxRuntimeExports, c as React, ag as reactDomExports } from "./index-BepgGYDm.js";
-import { k as composeRefs, e as useComposedRefs } from "./button-rcDW-ULO.js";
+import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, g as utf8ToBytes, E as ExternalError, M as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, h as RequestStatusResponseStatus, U as UnknownError, i as RequestStatusDoneNoReplyErrorCode, k as RejectError, n as CertifiedRejectErrorCode, o as UNREACHABLE_ERROR, I as InputError, p as InvalidReadStateRequestErrorCode, q as ReadRequestType, s as Principal, t as IDL, v as MissingCanisterIdErrorCode, H as HttpAgent, w as encode, Q as QueryResponseStatus, x as UncertifiedRejectErrorCode, y as isV3ResponseBody, z as isV2ResponseBody, A as UncertifiedRejectUpdateErrorCode, B as UnexpectedErrorCode, D as decode, S as Subscribable, F as pendingThenable, G as resolveEnabled, J as shallowEqualObjects, K as resolveStaleTime, N as noop, O as environmentManager, V as isValidTimeout, W as timeUntilStale, X as timeoutManager, Y as focusManager, Z as fetchState, _ as replaceData, $ as notifyManager, r as reactExports, a0 as shouldThrowError, a1 as useQueryClient, a2 as useInternetIdentity, a3 as createActorWithConfig, a4 as Variant, a5 as Record, a6 as Opt, a7 as Vec, a8 as Service, a9 as Func, aa as Text, ab as Nat, ac as Null, ad as Bool, ae as Int, af as Principal$1, ag as Nat8 } from "./index-EDhnjgOJ.js";
 const FIVE_MINUTES_IN_MSEC = 5 * 60 * 1e3;
 function defaultStrategy() {
   return chain(conditionalDelay(once(), 1e3), backoff(1e3, 1.2), timeout(FIVE_MINUTES_IN_MSEC));
@@ -1082,6 +1081,12 @@ const ShoppingItem = Record({
   "priceInCents": Nat,
   "productDescription": Text
 });
+const LogEntry = Record({
+  "message": Text,
+  "timestamp": Int,
+  "success": Bool,
+  "channel": Text
+});
 const OrderId = Nat;
 const OrderStatus = Variant({
   "shipped": Null,
@@ -1197,6 +1202,7 @@ Service({
   ),
   "deleteProduct": Func([Text], [], []),
   "getCallerUserRole": Func([], [UserRole], ["query"]),
+  "getNotificationLog": Func([], [Vec(LogEntry)], ["query"]),
   "getOrder": Func([OrderId], [Opt(Order)], ["query"]),
   "getProduct": Func([Text], [Opt(Product)], ["query"]),
   "getStripeSessionStatus": Func([Text], [StripeSessionStatus], []),
@@ -1237,6 +1243,8 @@ Service({
     []
   ),
   "placeOrder": Func([Vec(OrderItem), Nat], [Order], []),
+  "setCallMeBotApiKey": Func([Text], [], []),
+  "setResendApiKey": Func([Text], [], []),
   "setStripeConfiguration": Func([StripeConfiguration], [], []),
   "submitOrderRequest": Func(
     [Text, Text, Text, Text, Nat, Text, Text],
@@ -1263,6 +1271,12 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "quantity": IDL2.Nat,
     "priceInCents": IDL2.Nat,
     "productDescription": IDL2.Text
+  });
+  const LogEntry2 = IDL2.Record({
+    "message": IDL2.Text,
+    "timestamp": IDL2.Int,
+    "success": IDL2.Bool,
+    "channel": IDL2.Text
   });
   const OrderId2 = IDL2.Nat;
   const OrderStatus2 = IDL2.Variant({
@@ -1376,6 +1390,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     ),
     "deleteProduct": IDL2.Func([IDL2.Text], [], []),
     "getCallerUserRole": IDL2.Func([], [UserRole2], ["query"]),
+    "getNotificationLog": IDL2.Func([], [IDL2.Vec(LogEntry2)], ["query"]),
     "getOrder": IDL2.Func([OrderId2], [IDL2.Opt(Order2)], ["query"]),
     "getProduct": IDL2.Func([IDL2.Text], [IDL2.Opt(Product2)], ["query"]),
     "getStripeSessionStatus": IDL2.Func([IDL2.Text], [StripeSessionStatus2], []),
@@ -1416,6 +1431,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
       []
     ),
     "placeOrder": IDL2.Func([IDL2.Vec(OrderItem2), IDL2.Nat], [Order2], []),
+    "setCallMeBotApiKey": IDL2.Func([IDL2.Text], [], []),
+    "setResendApiKey": IDL2.Func([IDL2.Text], [], []),
     "setStripeConfiguration": IDL2.Func([StripeConfiguration2], [], []),
     "submitOrderRequest": IDL2.Func(
       [IDL2.Text, IDL2.Text, IDL2.Text, IDL2.Text, IDL2.Nat, IDL2.Text, IDL2.Text],
@@ -1531,6 +1548,20 @@ class Backend {
     } else {
       const result = await this.actor.getCallerUserRole();
       return from_candid_UserRole_n3(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getNotificationLog() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getNotificationLog();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getNotificationLog();
+      return result;
     }
   }
   async getOrder(arg0) {
@@ -1713,6 +1744,34 @@ class Backend {
     } else {
       const result = await this.actor.placeOrder(to_candid_vec_n29(this._uploadFile, this._downloadFile, arg0), arg1);
       return from_candid_Order_n6(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async setCallMeBotApiKey(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.setCallMeBotApiKey(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.setCallMeBotApiKey(arg0);
+      return result;
+    }
+  }
+  async setResendApiKey(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.setResendApiKey(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.setResendApiKey(arg0);
+      return result;
     }
   }
   async setStripeConfiguration(arg0) {
@@ -2014,408 +2073,7 @@ function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
   });
   return new Backend(actor, _uploadFile, _downloadFile, options.processError);
 }
-function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
-  return function handleEvent(event) {
-    originalEventHandler == null ? void 0 : originalEventHandler(event);
-    if (checkForDefaultPrevented === false || !event.defaultPrevented) {
-      return ourEventHandler == null ? void 0 : ourEventHandler(event);
-    }
-  };
-}
-function createContext2(rootComponentName, defaultContext) {
-  const Context = reactExports.createContext(defaultContext);
-  const Provider = (props) => {
-    const { children, ...context } = props;
-    const value = reactExports.useMemo(() => context, Object.values(context));
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Context.Provider, { value, children });
-  };
-  Provider.displayName = rootComponentName + "Provider";
-  function useContext2(consumerName) {
-    const context = reactExports.useContext(Context);
-    if (context) return context;
-    if (defaultContext !== void 0) return defaultContext;
-    throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-  }
-  return [Provider, useContext2];
-}
-function createContextScope(scopeName, createContextScopeDeps = []) {
-  let defaultContexts = [];
-  function createContext3(rootComponentName, defaultContext) {
-    const BaseContext = reactExports.createContext(defaultContext);
-    const index = defaultContexts.length;
-    defaultContexts = [...defaultContexts, defaultContext];
-    const Provider = (props) => {
-      var _a2;
-      const { scope, children, ...context } = props;
-      const Context = ((_a2 = scope == null ? void 0 : scope[scopeName]) == null ? void 0 : _a2[index]) || BaseContext;
-      const value = reactExports.useMemo(() => context, Object.values(context));
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(Context.Provider, { value, children });
-    };
-    Provider.displayName = rootComponentName + "Provider";
-    function useContext2(consumerName, scope) {
-      var _a2;
-      const Context = ((_a2 = scope == null ? void 0 : scope[scopeName]) == null ? void 0 : _a2[index]) || BaseContext;
-      const context = reactExports.useContext(Context);
-      if (context) return context;
-      if (defaultContext !== void 0) return defaultContext;
-      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-    }
-    return [Provider, useContext2];
-  }
-  const createScope = () => {
-    const scopeContexts = defaultContexts.map((defaultContext) => {
-      return reactExports.createContext(defaultContext);
-    });
-    return function useScope(scope) {
-      const contexts = (scope == null ? void 0 : scope[scopeName]) || scopeContexts;
-      return reactExports.useMemo(
-        () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
-        [scope, contexts]
-      );
-    };
-  };
-  createScope.scopeName = scopeName;
-  return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
-}
-function composeContextScopes(...scopes) {
-  const baseScope = scopes[0];
-  if (scopes.length === 1) return baseScope;
-  const createScope = () => {
-    const scopeHooks = scopes.map((createScope2) => ({
-      useScope: createScope2(),
-      scopeName: createScope2.scopeName
-    }));
-    return function useComposedScopes(overrideScopes) {
-      const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
-        const scopeProps = useScope(overrideScopes);
-        const currentScope = scopeProps[`__scope${scopeName}`];
-        return { ...nextScopes2, ...currentScope };
-      }, {});
-      return reactExports.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
-    };
-  };
-  createScope.scopeName = baseScope.scopeName;
-  return createScope;
-}
-var useLayoutEffect2 = (globalThis == null ? void 0 : globalThis.document) ? reactExports.useLayoutEffect : () => {
-};
-var useInsertionEffect = React[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({
-  prop,
-  defaultProp,
-  onChange = () => {
-  },
-  caller
-}) {
-  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
-    defaultProp,
-    onChange
-  });
-  const isControlled = prop !== void 0;
-  const value = isControlled ? prop : uncontrolledProp;
-  {
-    const isControlledRef = reactExports.useRef(prop !== void 0);
-    reactExports.useEffect(() => {
-      const wasControlled = isControlledRef.current;
-      if (wasControlled !== isControlled) {
-        const from = wasControlled ? "controlled" : "uncontrolled";
-        const to = isControlled ? "controlled" : "uncontrolled";
-        console.warn(
-          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-        );
-      }
-      isControlledRef.current = isControlled;
-    }, [isControlled, caller]);
-  }
-  const setValue = reactExports.useCallback(
-    (nextValue) => {
-      var _a2;
-      if (isControlled) {
-        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
-        if (value2 !== prop) {
-          (_a2 = onChangeRef.current) == null ? void 0 : _a2.call(onChangeRef, value2);
-        }
-      } else {
-        setUncontrolledProp(nextValue);
-      }
-    },
-    [isControlled, prop, setUncontrolledProp, onChangeRef]
-  );
-  return [value, setValue];
-}
-function useUncontrolledState({
-  defaultProp,
-  onChange
-}) {
-  const [value, setValue] = reactExports.useState(defaultProp);
-  const prevValueRef = reactExports.useRef(value);
-  const onChangeRef = reactExports.useRef(onChange);
-  useInsertionEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]);
-  reactExports.useEffect(() => {
-    var _a2;
-    if (prevValueRef.current !== value) {
-      (_a2 = onChangeRef.current) == null ? void 0 : _a2.call(onChangeRef, value);
-      prevValueRef.current = value;
-    }
-  }, [value, prevValueRef]);
-  return [value, setValue, onChangeRef];
-}
-function isFunction(value) {
-  return typeof value === "function";
-}
-// @__NO_SIDE_EFFECTS__
-function createSlot(ownerName) {
-  const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
-  const Slot2 = reactExports.forwardRef((props, forwardedRef) => {
-    const { children, ...slotProps } = props;
-    const childrenArray = reactExports.Children.toArray(children);
-    const slottable = childrenArray.find(isSlottable);
-    if (slottable) {
-      const newElement = slottable.props.children;
-      const newChildren = childrenArray.map((child) => {
-        if (child === slottable) {
-          if (reactExports.Children.count(newElement) > 1) return reactExports.Children.only(null);
-          return reactExports.isValidElement(newElement) ? newElement.props.children : null;
-        } else {
-          return child;
-        }
-      });
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(SlotClone, { ...slotProps, ref: forwardedRef, children: reactExports.isValidElement(newElement) ? reactExports.cloneElement(newElement, void 0, newChildren) : null });
-    }
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(SlotClone, { ...slotProps, ref: forwardedRef, children });
-  });
-  Slot2.displayName = `${ownerName}.Slot`;
-  return Slot2;
-}
-// @__NO_SIDE_EFFECTS__
-function createSlotClone(ownerName) {
-  const SlotClone = reactExports.forwardRef((props, forwardedRef) => {
-    const { children, ...slotProps } = props;
-    if (reactExports.isValidElement(children)) {
-      const childrenRef = getElementRef$1(children);
-      const props2 = mergeProps(slotProps, children.props);
-      if (children.type !== reactExports.Fragment) {
-        props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
-      }
-      return reactExports.cloneElement(children, props2);
-    }
-    return reactExports.Children.count(children) > 1 ? reactExports.Children.only(null) : null;
-  });
-  SlotClone.displayName = `${ownerName}.SlotClone`;
-  return SlotClone;
-}
-var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
-function isSlottable(child) {
-  return reactExports.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
-}
-function mergeProps(slotProps, childProps) {
-  const overrideProps = { ...childProps };
-  for (const propName in childProps) {
-    const slotPropValue = slotProps[propName];
-    const childPropValue = childProps[propName];
-    const isHandler = /^on[A-Z]/.test(propName);
-    if (isHandler) {
-      if (slotPropValue && childPropValue) {
-        overrideProps[propName] = (...args) => {
-          const result = childPropValue(...args);
-          slotPropValue(...args);
-          return result;
-        };
-      } else if (slotPropValue) {
-        overrideProps[propName] = slotPropValue;
-      }
-    } else if (propName === "style") {
-      overrideProps[propName] = { ...slotPropValue, ...childPropValue };
-    } else if (propName === "className") {
-      overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
-    }
-  }
-  return { ...slotProps, ...overrideProps };
-}
-function getElementRef$1(element) {
-  var _a2, _b;
-  let getter = (_a2 = Object.getOwnPropertyDescriptor(element.props, "ref")) == null ? void 0 : _a2.get;
-  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.ref;
-  }
-  getter = (_b = Object.getOwnPropertyDescriptor(element, "ref")) == null ? void 0 : _b.get;
-  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.props.ref;
-  }
-  return element.props.ref || element.ref;
-}
-var NODES = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-];
-var Primitive = NODES.reduce((primitive, node) => {
-  const Slot = /* @__PURE__ */ createSlot(`Primitive.${node}`);
-  const Node = reactExports.forwardRef((props, forwardedRef) => {
-    const { asChild, ...primitiveProps } = props;
-    const Comp = asChild ? Slot : node;
-    if (typeof window !== "undefined") {
-      window[Symbol.for("radix-ui")] = true;
-    }
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Comp, { ...primitiveProps, ref: forwardedRef });
-  });
-  Node.displayName = `Primitive.${node}`;
-  return { ...primitive, [node]: Node };
-}, {});
-function dispatchDiscreteCustomEvent(target, event) {
-  if (target) reactDomExports.flushSync(() => target.dispatchEvent(event));
-}
-function useStateMachine(initialState, machine) {
-  return reactExports.useReducer((state, event) => {
-    const nextState = machine[state][event];
-    return nextState ?? state;
-  }, initialState);
-}
-var Presence = (props) => {
-  const { present, children } = props;
-  const presence = usePresence(present);
-  const child = typeof children === "function" ? children({ present: presence.isPresent }) : reactExports.Children.only(children);
-  const ref = useComposedRefs(presence.ref, getElementRef(child));
-  const forceMount = typeof children === "function";
-  return forceMount || presence.isPresent ? reactExports.cloneElement(child, { ref }) : null;
-};
-Presence.displayName = "Presence";
-function usePresence(present) {
-  const [node, setNode] = reactExports.useState();
-  const stylesRef = reactExports.useRef(null);
-  const prevPresentRef = reactExports.useRef(present);
-  const prevAnimationNameRef = reactExports.useRef("none");
-  const initialState = present ? "mounted" : "unmounted";
-  const [state, send] = useStateMachine(initialState, {
-    mounted: {
-      UNMOUNT: "unmounted",
-      ANIMATION_OUT: "unmountSuspended"
-    },
-    unmountSuspended: {
-      MOUNT: "mounted",
-      ANIMATION_END: "unmounted"
-    },
-    unmounted: {
-      MOUNT: "mounted"
-    }
-  });
-  reactExports.useEffect(() => {
-    const currentAnimationName = getAnimationName(stylesRef.current);
-    prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
-  }, [state]);
-  useLayoutEffect2(() => {
-    const styles = stylesRef.current;
-    const wasPresent = prevPresentRef.current;
-    const hasPresentChanged = wasPresent !== present;
-    if (hasPresentChanged) {
-      const prevAnimationName = prevAnimationNameRef.current;
-      const currentAnimationName = getAnimationName(styles);
-      if (present) {
-        send("MOUNT");
-      } else if (currentAnimationName === "none" || (styles == null ? void 0 : styles.display) === "none") {
-        send("UNMOUNT");
-      } else {
-        const isAnimating = prevAnimationName !== currentAnimationName;
-        if (wasPresent && isAnimating) {
-          send("ANIMATION_OUT");
-        } else {
-          send("UNMOUNT");
-        }
-      }
-      prevPresentRef.current = present;
-    }
-  }, [present, send]);
-  useLayoutEffect2(() => {
-    if (node) {
-      let timeoutId;
-      const ownerWindow = node.ownerDocument.defaultView ?? window;
-      const handleAnimationEnd = (event) => {
-        const currentAnimationName = getAnimationName(stylesRef.current);
-        const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
-        if (event.target === node && isCurrentAnimation) {
-          send("ANIMATION_END");
-          if (!prevPresentRef.current) {
-            const currentFillMode = node.style.animationFillMode;
-            node.style.animationFillMode = "forwards";
-            timeoutId = ownerWindow.setTimeout(() => {
-              if (node.style.animationFillMode === "forwards") {
-                node.style.animationFillMode = currentFillMode;
-              }
-            });
-          }
-        }
-      };
-      const handleAnimationStart = (event) => {
-        if (event.target === node) {
-          prevAnimationNameRef.current = getAnimationName(stylesRef.current);
-        }
-      };
-      node.addEventListener("animationstart", handleAnimationStart);
-      node.addEventListener("animationcancel", handleAnimationEnd);
-      node.addEventListener("animationend", handleAnimationEnd);
-      return () => {
-        ownerWindow.clearTimeout(timeoutId);
-        node.removeEventListener("animationstart", handleAnimationStart);
-        node.removeEventListener("animationcancel", handleAnimationEnd);
-        node.removeEventListener("animationend", handleAnimationEnd);
-      };
-    } else {
-      send("ANIMATION_END");
-    }
-  }, [node, send]);
-  return {
-    isPresent: ["mounted", "unmountSuspended"].includes(state),
-    ref: reactExports.useCallback((node2) => {
-      stylesRef.current = node2 ? getComputedStyle(node2) : null;
-      setNode(node2);
-    }, [])
-  };
-}
-function getAnimationName(styles) {
-  return (styles == null ? void 0 : styles.animationName) || "none";
-}
-function getElementRef(element) {
-  var _a2, _b;
-  let getter = (_a2 = Object.getOwnPropertyDescriptor(element.props, "ref")) == null ? void 0 : _a2.get;
-  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.ref;
-  }
-  getter = (_b = Object.getOwnPropertyDescriptor(element, "ref")) == null ? void 0 : _b.get;
-  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.props.ref;
-  }
-  return element.props.ref || element.ref;
-}
 export {
-  Primitive as P,
-  useControllableState as a,
-  Presence as b,
-  composeEventHandlers as c,
-  dispatchDiscreteCustomEvent as d,
-  createContextScope as e,
-  createSlot as f,
-  createContext2 as g,
-  useActor as h,
-  createActor as i,
-  useLayoutEffect2 as u
+  createActor as c,
+  useActor as u
 };

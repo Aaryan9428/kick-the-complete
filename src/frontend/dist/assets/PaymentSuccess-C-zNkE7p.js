@@ -1,7 +1,7 @@
-import { a as useSearch, j as jsxRuntimeExports, m as motion, L as Link } from "./index-BepgGYDm.js";
-import { L as Layout, B as Button } from "./button-rcDW-ULO.js";
-import { C as CircleCheck, S as Smartphone, B as Banknote } from "./smartphone-BitHaup5.js";
-import { P as Package } from "./package-C4lRBRd-.js";
+import { a as useSearch, j as jsxRuntimeExports, m as motion, L as Link } from "./index-EDhnjgOJ.js";
+import { L as Layout, B as Button } from "./button-B4gG1HGM.js";
+import { C as CircleCheck, S as Smartphone, B as Banknote } from "./smartphone-DSZYQ7lR.js";
+import { P as Package } from "./package-C-aPwEYg.js";
 function PaymentSuccess() {
   const search = useSearch({ strict: false });
   const { displayOrderId, paymentMethod, total } = search;
@@ -26,8 +26,8 @@ function PaymentSuccess() {
               {
                 className: "w-24 h-24 rounded-full mx-auto mb-8 flex items-center justify-center relative",
                 style: {
-                  background: "radial-gradient(circle, rgba(236,72,153,0.2) 0%, rgba(168,85,247,0.1) 100%)",
-                  border: "1px solid rgba(236,72,153,0.3)"
+                  background: "radial-gradient(circle, rgba(220,38,38,0.25) 0%, rgba(153,27,27,0.12) 100%)",
+                  border: "1px solid rgba(220,38,38,0.35)"
                 },
                 animate: { scale: [1, 1.04, 1] },
                 transition: {
@@ -36,12 +36,12 @@ function PaymentSuccess() {
                   ease: "easeInOut"
                 },
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-12 h-12 text-pink-400" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-12 h-12 text-red-500" }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     motion.div,
                     {
                       className: "absolute inset-0 rounded-full",
-                      style: { border: "2px solid rgba(236,72,153,0.4)" },
+                      style: { border: "2px solid rgba(220,38,38,0.45)" },
                       animate: { scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] },
                       transition: {
                         duration: 2.5,
@@ -75,7 +75,7 @@ function PaymentSuccess() {
                 "data-ocid": "payment_success.order_id_card",
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 uppercase tracking-widest mb-1", children: "Order ID" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl font-display font-black bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent", children: displayOrderId }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl font-display font-black bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent", children: displayOrderId }),
                   formattedTotal && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-400 mt-2", children: [
                     "Amount paid:",
                     " ",
@@ -96,8 +96,8 @@ function PaymentSuccess() {
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "div",
                     {
-                      className: `w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isPhonePe ? "bg-purple-500/20" : "bg-emerald-500/20"}`,
-                      children: isPhonePe ? /* @__PURE__ */ jsxRuntimeExports.jsx(Smartphone, { className: "w-5 h-5 text-purple-400" }) : isCod ? /* @__PURE__ */ jsxRuntimeExports.jsx(Banknote, { className: "w-5 h-5 text-emerald-400" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Package, { className: "w-5 h-5 text-pink-400" })
+                      className: `w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isPhonePe ? "bg-red-500/20" : "bg-emerald-500/20"}`,
+                      children: isPhonePe ? /* @__PURE__ */ jsxRuntimeExports.jsx(Smartphone, { className: "w-5 h-5 text-red-400" }) : isCod ? /* @__PURE__ */ jsxRuntimeExports.jsx(Banknote, { className: "w-5 h-5 text-emerald-400" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Package, { className: "w-5 h-5 text-red-400" })
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -119,7 +119,7 @@ function PaymentSuccess() {
                     to: "/shop",
                     search: { category: void 0, brand: void 0, q: void 0 },
                     "data-ocid": "payment_success.continue_shopping_button",
-                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { className: "bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-bold px-8 py-3 h-auto rounded-xl shadow-[0_0_30px_rgba(236,72,153,0.4)] hover:shadow-[0_0_40px_rgba(236,72,153,0.6)] transition-all duration-200", children: "Continue Shopping" })
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { className: "bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold px-8 py-3 h-auto rounded-xl shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_40px_rgba(220,38,38,0.6)] transition-all duration-200", children: "Continue Shopping" })
                   }
                 )
               }

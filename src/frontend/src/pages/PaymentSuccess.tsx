@@ -36,8 +36,8 @@ export default function PaymentSuccess() {
             className="w-24 h-24 rounded-full mx-auto mb-8 flex items-center justify-center relative"
             style={{
               background:
-                "radial-gradient(circle, rgba(236,72,153,0.2) 0%, rgba(168,85,247,0.1) 100%)",
-              border: "1px solid rgba(236,72,153,0.3)",
+                "radial-gradient(circle, rgba(220,38,38,0.25) 0%, rgba(153,27,27,0.12) 100%)",
+              border: "1px solid rgba(220,38,38,0.35)",
             }}
             animate={{ scale: [1, 1.04, 1] }}
             transition={{
@@ -46,10 +46,10 @@ export default function PaymentSuccess() {
               ease: "easeInOut",
             }}
           >
-            <CheckCircle2 className="w-12 h-12 text-pink-400" />
+            <CheckCircle2 className="w-12 h-12 text-red-500" />
             <motion.div
               className="absolute inset-0 rounded-full"
-              style={{ border: "2px solid rgba(236,72,153,0.4)" }}
+              style={{ border: "2px solid rgba(220,38,38,0.45)" }}
               animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
               transition={{
                 duration: 2.5,
@@ -83,7 +83,7 @@ export default function PaymentSuccess() {
               <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
                 Order ID
               </p>
-              <p className="text-xl font-display font-black bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+              <p className="text-xl font-display font-black bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">
                 {displayOrderId}
               </p>
               {formattedTotal && (
@@ -105,15 +105,15 @@ export default function PaymentSuccess() {
             <div className="flex items-start gap-4">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-                  isPhonePe ? "bg-purple-500/20" : "bg-emerald-500/20"
+                  isPhonePe ? "bg-red-500/20" : "bg-emerald-500/20"
                 }`}
               >
                 {isPhonePe ? (
-                  <Smartphone className="w-5 h-5 text-purple-400" />
+                  <Smartphone className="w-5 h-5 text-red-400" />
                 ) : isCod ? (
                   <Banknote className="w-5 h-5 text-emerald-400" />
                 ) : (
-                  <Package className="w-5 h-5 text-pink-400" />
+                  <Package className="w-5 h-5 text-red-400" />
                 )}
               </div>
               <div>
@@ -145,7 +145,7 @@ export default function PaymentSuccess() {
               search={{ category: undefined, brand: undefined, q: undefined }}
               data-ocid="payment_success.continue_shopping_button"
             >
-              <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-bold px-8 py-3 h-auto rounded-xl shadow-[0_0_30px_rgba(236,72,153,0.4)] hover:shadow-[0_0_40px_rgba(236,72,153,0.6)] transition-all duration-200">
+              <Button className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold px-8 py-3 h-auto rounded-xl shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_40px_rgba(220,38,38,0.6)] transition-all duration-200">
                 Continue Shopping
               </Button>
             </Link>

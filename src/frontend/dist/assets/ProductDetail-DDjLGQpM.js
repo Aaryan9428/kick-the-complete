@@ -1,10 +1,10 @@
-import { b as useParams, r as reactExports, j as jsxRuntimeExports, L as Link, m as motion, u as ue } from "./index-BepgGYDm.js";
-import { c as createLucideIcon, u as useCartStore, b as useUIStore, L as Layout, B as Button, d as ShoppingCart, H as Heart } from "./button-rcDW-ULO.js";
-import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-9QYfpook.js";
-import { b as getProductById, P as PRODUCTS, B as Badge } from "./products-U2Q5Zptf.js";
-import { P as Package } from "./package-C4lRBRd-.js";
-import "./index-DBimtIV6.js";
-import "./loader-circle-Cpv7GnKP.js";
+import { b as useParams, r as reactExports, j as jsxRuntimeExports, L as Link, m as motion, u as ue } from "./index-EDhnjgOJ.js";
+import { c as createLucideIcon, u as useCartStore, b as useUIStore, L as Layout, B as Button, d as ShoppingCart, H as Heart } from "./button-B4gG1HGM.js";
+import { u as useWishlistStore, O as OrderModal } from "./wishlistStore-eSQ1kDu6.js";
+import { b as getProductById, P as PRODUCTS, B as Badge } from "./products-CVM2En7h.js";
+import { P as Package } from "./package-C-aPwEYg.js";
+import "./backend-C4U0oltt.js";
+import "./loader-circle-Dch6iWqb.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *

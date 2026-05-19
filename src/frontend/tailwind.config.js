@@ -109,9 +109,9 @@ export default {
         md: '0 8px 24px 0 rgba(0, 0, 0, 0.4)',
         'glow-accent': '0 0 30px 0 rgba(239, 68, 68, 0.3)',
         'glow-blue': '0 0 40px 0 rgba(59, 130, 246, 0.25)',
-        'glow-pink': '0 0 40px 0 rgba(244, 114, 182, 0.35)',
+        "glow-red": "0 0 40px 0 rgba(220, 38, 38, 0.45)",
         'glow-purple': '0 0 40px 0 rgba(168, 85, 247, 0.35)',
-        'glow-luxury': '0 0 60px 0 rgba(168, 85, 247, 0.2)',
+        "glow-luxury": "0 0 60px 0 rgba(220, 38, 38, 0.25), 0 0 120px 0 rgba(109, 40, 217, 0.08)",
         subtle: '0 2px 8px 0 rgba(0, 0, 0, 0.25)',
       },
       keyframes: {
@@ -154,7 +154,7 @@ export default {
         "shimmer": "shimmer 2s linear infinite",
       },
       backgroundImage: {
-        "gradient-luxury": "linear-gradient(135deg, #f472b6 0%, #a855f7 50%, #7c3aed 100%)",
+        "gradient-luxury": "linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%)",
         "gradient-dark":   "linear-gradient(135deg, #050508 0%, #0a0a0f 50%, #050508 100%)",
       },
     },

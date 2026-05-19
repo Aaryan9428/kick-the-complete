@@ -1,4 +1,4 @@
-import { r as reactExports, ah as MotionConfigContext, j as jsxRuntimeExports, ai as isHTMLElement, aj as useConstant, ak as PresenceContext, al as usePresence, am as useIsomorphicLayoutEffect, an as LayoutGroupContext, R as React, m as motion, L as Link, a1 as useInternetIdentity, ao as useRouterState, c as React$1 } from "./index-BepgGYDm.js";
+import { r as reactExports, ah as MotionConfigContext, j as jsxRuntimeExports, ai as isHTMLElement, aj as useConstant, ak as PresenceContext, al as usePresence, am as useIsomorphicLayoutEffect, an as LayoutGroupContext, R as React, m as motion, L as Link, a2 as useInternetIdentity, ao as useRouterState, c as React$1 } from "./index-EDhnjgOJ.js";
 function setRef$1(ref, value) {
   if (typeof ref === "function") {
     return ref(value);
@@ -823,9 +823,9 @@ function CartDrawer() {
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-5 py-4 border-b border-white/10", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingBag, { className: "w-5 h-5 text-pink-400" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingBag, { className: "w-5 h-5 text-red-500" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-base font-display font-bold text-foreground tracking-wide", children: "Shopping Cart" }),
-              items.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium px-2 py-0.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white", children: items.reduce((s, i) => s + i.quantity, 0) })
+              items.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium px-2 py-0.5 rounded-full bg-gradient-to-r from-red-600 to-red-800 text-white", children: items.reduce((s, i) => s + i.quantity, 0) })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "button",
@@ -860,7 +860,7 @@ function CartDrawer() {
                       {
                         type: "button",
                         onClick: closeCart,
-                        className: "mt-2 text-sm font-medium text-pink-400 hover:text-pink-300 transition-smooth",
+                        className: "mt-2 text-sm font-medium text-red-500 hover:text-red-400 transition-smooth",
                         children: "Continue Shopping →"
                       }
                     )
@@ -897,7 +897,7 @@ function CartDrawer() {
                         {
                           className: "text-sm font-bold mt-1.5",
                           style: {
-                            background: "linear-gradient(90deg, #ec4899, #a855f7)",
+                            background: "linear-gradient(90deg, #dc2626, #991b1b)",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent"
                           },
@@ -973,7 +973,7 @@ function CartDrawer() {
                   "span",
                   {
                     style: {
-                      background: "linear-gradient(90deg, #ec4899, #a855f7)",
+                      background: "linear-gradient(90deg, #dc2626, #991b1b)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent"
                     },
@@ -990,8 +990,8 @@ function CartDrawer() {
                 "data-ocid": "cart_drawer.checkout_button",
                 className: "block w-full py-3 rounded-xl text-center text-sm font-bold text-white transition-smooth hover:opacity-90 active:scale-[0.98]",
                 style: {
-                  background: "linear-gradient(90deg, #ec4899, #a855f7)",
-                  boxShadow: "0 0 24px rgba(236,72,153,0.35)"
+                  background: "linear-gradient(90deg, #dc2626, #991b1b)",
+                  boxShadow: "0 0 24px rgba(220,38,38,0.40)"
                 },
                 children: "Proceed to Checkout"
               }
@@ -1206,7 +1206,7 @@ function Header() {
                 "aria-label": "Cart",
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCart, { className: "w-4 h-4" }),
-                  totalItems > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute -top-0.5 -right-0.5 w-4 h-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center", children: totalItems > 9 ? "9+" : totalItems })
+                  totalItems > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center", children: totalItems > 9 ? "9+" : totalItems })
                 ]
               }
             ),
@@ -1215,7 +1215,7 @@ function Header() {
               {
                 to: "/login",
                 "data-ocid": "header.login_button",
-                className: `hidden md:flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-medium transition-smooth ${isAuthenticated ? "bg-muted/40 text-foreground hover:bg-muted" : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-glow-accent"}`,
+                className: `hidden md:flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-medium transition-smooth ${isAuthenticated ? "bg-muted/40 text-foreground hover:bg-muted" : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-glow-red"}`,
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "w-3.5 h-3.5" }),
                   isAuthenticated ? "Account" : "Login"
@@ -1255,6 +1255,7 @@ function Header() {
                     q: void 0
                   },
                   className: "flex items-center h-11 px-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-smooth",
+                  onClick: () => setMobileOpen(false),
                   children: link.label
                 },
                 link.to
@@ -1263,7 +1264,8 @@ function Header() {
                 Link,
                 {
                   to: "/login",
-                  className: "flex items-center gap-2 h-11 px-3 rounded-lg text-sm font-medium text-foreground hover:bg-muted/40 transition-smooth mt-1 border-t border-border/20 pt-3",
+                  className: "flex items-center gap-2 h-11 px-3 rounded-lg text-sm font-medium text-foreground hover:bg-muted/40 transition-smooth mt-2 border-t border-border/20 pt-3",
+                  onClick: () => setMobileOpen(false),
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "w-4 h-4" }),
                     isAuthenticated ? "Account" : "Login / Register"
@@ -3988,13 +3990,13 @@ export {
   useUIStore as b,
   createLucideIcon as c,
   ShoppingCart as d,
-  useComposedRefs as e,
-  create as f,
-  Slot as g,
-  cva as h,
-  ShoppingBag as i,
-  createSlot as j,
-  composeRefs as k,
+  composeRefs as e,
+  useComposedRefs as f,
+  create as g,
+  Slot as h,
+  cva as i,
+  ShoppingBag as j,
+  createSlot as k,
   persist as p,
   useCartStore as u
 };

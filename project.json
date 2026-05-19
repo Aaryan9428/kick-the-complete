@@ -1,28 +1,24 @@
 {
-  "overview": "Kicks The Complete Sneakers Store — a luxury cinematic ecommerce website for premium sneakers. Features a full shopping cart with slide-in drawer, complete checkout with Cash on Delivery and PhonePe UPI payment options, order notifications to the store owner via email, and a premium dark theme with pink-to-purple gradient accents.",
+  "overview": "Kicks The Complete Sneakers Store is a luxury, cinematic sneaker ecommerce website with a deep red premium aesthetic, real-time order notifications via WhatsApp and email, UPI QR code payments, and a fully animated shopping experience.",
   "features": [
-    "Luxury cinematic dark theme with pink-to-purple gradients",
-    "Slide-in cart drawer with quantity management and live totals",
-    "Full checkout with COD and PhonePe UPI payment options",
-    "PhonePe payment screen with UPI ID and payment instructions",
-    "Order notifications emailed to store owner on every purchase",
-    "Order success page with generated order ID",
-    "15+ premium sneaker products with sizes and pricing in INR",
-    "Fully responsive mobile-first design",
-    "Smooth Framer Motion animations throughout",
-    "Hero section with KICKS in luxury gradient typography"
+    "Luxury red cinematic UI with glassmorphism and 60fps animations",
+    "Slide-in cart drawer with persistence and live totals",
+    "Premium checkout with COD and UPI QR code payment",
+    "Real email notifications to store owner and customer via Resend API",
+    "Instant WhatsApp order alerts via CallMeBot",
+    "Flagship mobile experience with sticky navigation",
+    "Full product catalog with animated cards and hover effects"
   ],
   "category": "ecommerce",
   "tags": [
     "sneakers",
     "ecommerce",
     "luxury",
-    "fashion",
-    "mobile-first",
-    "dark-theme",
-    "india",
+    "cinematic",
     "upi",
-    "cod"
+    "whatsapp",
+    "notifications",
+    "mobile"
   ],
-  "last_updated": "2026-05-14T16:25:49.405Z"
+  "last_updated": "2026-05-15T15:55:30.915Z"
 }
